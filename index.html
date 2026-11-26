@@ -990,7 +990,6 @@ if (state.session) state.screen = "workout";
 persist.templates();
 render();
 
-/* PWA: registrar service worker */
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {
     navigator.serviceWorker.register("./sw.js").catch(() => {});
