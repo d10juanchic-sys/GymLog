@@ -6,7 +6,6 @@
 <meta name="theme-color" content="#0d1117">
 <title>GymLog — Registro de entrenamiento</title>
 <link rel="manifest" href="./manifest.json">
-<meta name="theme-color" content="#0d1117">
 <style>
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 :root{
@@ -541,7 +540,22 @@ function renderHistory(){
         </div>
         <div class="lbl mt8">Volumen total: ${h.volume.toLocaleString("es-AR")} kg</div>
       </div>`).join("") +
-    `<button class="btn danger big mt12" data-act="clearHistory">Borrar historial</button>`;
+    `<div class="card" style="border-color:var(--acc)">
+      <div class="exname" style="color:var(--acc)">Exportar para Asistente IA</div>
+      <div class="lbl mt8" style="line-height:1.4">
+        Genera un resumen de tu progreso en texto. Ideal para pegar en DeepSeek o ChatGPT y pedir ajustes de rutina.
+      </div>
+      <div class="row gap6 mt12">
+        <select id="aiRange" class="inp" style="flex:1; padding:10px">
+          <option value="3">Últimas 3 sesiones</option>
+          <option value="5" selected>Últimas 5 sesiones</option>
+          <option value="10">Últimas 10 sesiones</option>
+          <option value="all">Todo el historial</option>
+        </select>
+        <button class="btn acc" data-act="copyForAI">Copiar reporte</button>
+      </div>
+    </div>
+    <button class="btn danger big mt12" data-act="clearHistory">Borrar historial</button>`;
 }
 
 /* ---------- REST DOCK ---------- */
@@ -666,7 +680,7 @@ function modalTemplate(tplId){
 }
 
 /* ============================================================
-   EXPORTAR / IMPORTAR
+   EXPORTAR / IMPORTAR / REPORTE IA
    ============================================================ */
 function exportData(){
   const data = {
@@ -735,6 +749,41 @@ function importData(file){
     }
   };
   reader.readAsText(file);
+}
+
+function generateAIText(limit) {
+  const p = state.profile;
+  let hist = state.history.slice().reverse(); // Más recientes primero
+  if (limit !== "all") hist = hist.slice(0, parseInt(limit));
+  
+  const imcVal = calcIMC(p.weight, p.height);
+  const imcStr = imcVal ? imcVal.toFixed(1) : "No calculado";
+
+  let txt = `Actúa como un entrenador personal experto. Analiza mi historial de entrenamiento y ayúdame a ajustar mi rutina.\n\n`;
+  txt += `=== PERFIL DEL ATLETA ===\n`;
+  txt += `- Peso: ${p.weight || "?"} kg\n- Altura: ${p.height || "?"} cm\n- Edad: ${p.age || "?"} años\n`;
+  txt += `- IMC: ${imcStr}\n\n`;
+  txt += `=== HISTORIAL DE SESIONES (últimas ${hist.length}) ===\n\n`;
+
+  hist.forEach(h => {
+    txt += `📅 ${fmtDate(h.date)} (${fmtTime(h.date)}) | Plantilla: ${h.templateName}\n`;
+    txt += `⏱ Duración: ${fmtClock(h.durationMs)} | Volumen: ${h.volume} kg | Series: ${h.doneSets}/${h.totalSets}\n`;
+    
+    h.exercises.forEach(ex => {
+      const done = ex.sets.filter(s => s.done);
+      if (done.length === 0) return;
+      
+      txt += `- ${ex.name} (Objetivo: ${ex.reps}):\n`;
+      done.forEach((s, i) => {
+        txt += `   Serie ${i+1}: ${s.weight || "0"}kg x ${s.reps || "?"} reps\n`;
+      });
+    });
+    txt += `\n----------------------------------------\n\n`;
+  });
+
+  txt += `Por favor, analiza la progresión de mis cargas, detecta si hay estancamiento en algún ejercicio y sugiere qué pesos o repeticiones debería intentar en mi próxima sesión. Prioriza la claridad.`;
+
+  return txt;
 }
 
 /* ============================================================
@@ -932,7 +981,20 @@ document.addEventListener("click", e => {
     persist.templates(); closeModal(); render(); return;
   }
 
-  /* historial */
+  /* historial & IA */
+  if (act === "copyForAI"){
+    const limit = $("#aiRange").value;
+    const text = generateAIText(limit);
+    
+    navigator.clipboard.writeText(text).then(() => {
+      btn.textContent = "✓ ¡Copiado!";
+      btn.classList.remove("acc");
+      setTimeout(() => { btn.textContent = "Copiar reporte"; btn.classList.add("acc"); }, 2000);
+    }).catch(err => {
+      alert("Error al copiar. Tu navegador puede requerir HTTPS o permisos.");
+    });
+    return;
+  }
   if (act === "clearHistory"){
     if (confirm("¿Borrar todo el historial? No se puede deshacer.")){
       state.history = []; persist.history(); render();
@@ -987,14 +1049,13 @@ $("#view").addEventListener("input", e => {
 });
 
 /* ============================================================
-   ARRANQUE
+   ARRANQUE y PWA
    ============================================================ */
 if (state.session) state.screen = "workout";
 persist.templates();
 render();
 
-if ("serviceWorker" in navigator) {
-  // Lógica del botón de instalación
+// Lógica del botón de instalación
 let deferredPrompt;
 const installBtn = document.getElementById("installBtn");
 
@@ -1013,6 +1074,9 @@ if (installBtn) {
     deferredPrompt = null;
   });
 }
+
+// Registrar Service Worker para modo offline
+if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {
     navigator.serviceWorker.register("./sw.js").catch(() => {});
   });
