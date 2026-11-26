@@ -1,0 +1,19 @@
+{
+  "name": "GymLog — Registro de entrenamiento",
+  "short_name": "GymLog",
+  "description": "Registro de entrenamientos con cronómetros y perfil",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#0d1117",
+  "theme_color": "#0d1117",
+  "icons": [
+    {
+      "src": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIgNTEyIj48cmVjdCB3aWR0aD0iNTEyIiBoZWlnaHQ9IjUxMiIgcng9IjExMCIgZmlsbD0iIzBkMTExNyIvPjxyZWN0IHg9IjcwIiB5PSIyMjYiIHdpZHRoPSIzNzIiIGhlaWdodD0iNjAiIHJ4PSIxMiIgZmlsbD0iIzhiZjE0YSIvPjxyZWN0IHg9IjEwMCIgeT0iMTgwIiB3aWR0aD0iNDAiIGhlaWdodD0iMTUyIiByeD0iOCIgZmlsbD0iIzRkZDZmMCIvPjxyZWN0IHg9IjM3MiIgeT0iMTgwIiB3aWR0aD0iNDAiIGhlaWdodD0iMTUyIiByeD0iOCIgZmlsbD0iIzRkZDZmMCIvPjx0ZXh0IHg9IjI1NiIgeT0iMTAwIiBmb250LWZhbWlseT0ic2Fucy1zZXJpZiIgZm9udC1zaXplPSI2MCIgZm9udC13ZWlnaHQ9IjgwMCIgZmlsbD0iIzhiZjE0YSIgdGV4dC1hbmNob3I9Im1pZGRsZSI+R1k8L3RleHQ+PC9zdmc+",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

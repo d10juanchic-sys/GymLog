@@ -1,0 +1,1001 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0d1117">
+<title>GymLog — Registro de entrenamiento</title>
+<style>
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+:root{
+  --bg:#0d1117; --card:#161c26; --card2:#1d2531; --line:#28323f;
+  --txt:#e8eef7; --muted:#8b98ab; --acc:#8bf14a; --acc2:#4dd6f0;
+  --warn:#ffb020; --danger:#ff5d5d; --r:14px;
+}
+html,body{margin:0;padding:0}
+body{
+  background:radial-gradient(1100px 600px at 50% -25%, #17222f 0%, var(--bg) 62%) fixed;
+  color:var(--txt); font-size:15px; line-height:1.45;
+  font-family:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  min-height:100vh; padding-bottom:170px;
+}
+.mono{font-variant-numeric:tabular-nums;font-feature-settings:"tnum"}
+.lbl{color:var(--muted);font-size:11.5px;letter-spacing:.04em;text-transform:uppercase}
+.row{display:flex;align-items:center}
+.between{justify-content:space-between}
+.gap6{gap:6px}.gap8{gap:8px}.mt8{margin-top:8px}.mt12{margin-top:12px}
+.hidden{display:none!important}
+
+.topbar{
+  position:sticky;top:0;z-index:40;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:14px 16px 12px;
+  background:linear-gradient(180deg,rgba(13,17,23,.96),rgba(13,17,23,.78));
+  backdrop-filter:blur(12px); border-bottom:1px solid var(--line);
+}
+.brand{font-weight:800;letter-spacing:.14em;font-size:15px}
+.brand b{color:var(--acc)}
+.topbar nav{display:flex;gap:6px}
+.topbar nav button{
+  background:transparent;border:1px solid var(--line);color:var(--muted);
+  padding:7px 11px;border-radius:10px;font-size:12.5px;font-weight:600;cursor:pointer;
+}
+.topbar nav button.on{color:#0b1206;background:var(--acc);border-color:var(--acc)}
+
+main{padding:16px;max-width:720px;margin:0 auto}
+.section-title{font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);
+  margin:22px 0 10px;font-weight:700}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:14px;margin-bottom:10px}
+.empty{color:var(--muted);text-align:center;padding:34px 16px;font-size:14px}
+
+.hero{
+  background:linear-gradient(150deg,#1a2432,#141a23 60%);
+  border:1px solid var(--line);border-radius:20px;padding:22px 18px;margin-bottom:8px;
+  position:relative;overflow:hidden;
+}
+.hero::after{content:"";position:absolute;width:220px;height:220px;right:-90px;top:-90px;
+  background:radial-gradient(circle,rgba(139,241,74,.18),transparent 70%);border-radius:50%}
+.hero h1{margin:0 0 4px;font-size:21px;letter-spacing:-.02em}
+.hero p{margin:0 0 16px;color:var(--muted);font-size:13.5px}
+.hero.compact{padding:18px}
+.hero.compact h1{font-size:19px}
+.hero.compact p{margin-bottom:0}
+
+.btn{
+  border:1px solid var(--line);background:var(--card2);color:var(--txt);
+  padding:11px 16px;border-radius:12px;font-size:14px;font-weight:650;cursor:pointer;
+  transition:transform .06s, filter .15s;
+}
+.btn:active{transform:scale(.975)}
+.btn.acc{background:var(--acc);color:#0b1206;border-color:var(--acc)}
+.btn.danger{background:transparent;color:var(--danger);border-color:rgba(255,93,93,.4)}
+.btn.ghost{background:transparent}
+.btn.big{width:100%;padding:15px;font-size:15.5px;border-radius:14px}
+.btn.sm{padding:7px 11px;font-size:12.5px;border-radius:10px}
+.btn.xs{padding:6px 10px;font-size:12px;border-radius:9px}
+.btn.rest{background:rgba(77,214,240,.1);border-color:rgba(77,214,240,.35);color:var(--acc2);
+  padding:8px 12px;font-size:12.5px;border-radius:10px;font-weight:700;white-space:nowrap}
+
+.sticky-head{
+  position:sticky;top:57px;z-index:30;
+  background:rgba(13,17,23,.94);backdrop-filter:blur(12px);
+  border:1px solid var(--line);border-radius:var(--r);padding:13px 14px;margin-bottom:14px;
+}
+.title-sm{font-size:16px;font-weight:750;letter-spacing:-.01em}
+.timer{font-size:27px;font-weight:800;letter-spacing:.02em;
+  font-variant-numeric:tabular-nums;color:var(--acc);line-height:1}
+.timer.paused{color:var(--warn)}
+.progress{height:5px;background:#0a0e14;border-radius:99px;overflow:hidden;margin-top:11px}
+.progress i{display:block;height:100%;background:linear-gradient(90deg,var(--acc),var(--acc2));
+  width:0;transition:width .3s ease}
+
+.exname{font-size:15.5px;font-weight:750;letter-spacing:-.01em}
+.sets{margin-top:11px;display:flex;flex-direction:column;gap:6px}
+.set{display:grid;grid-template-columns:26px 1fr 1fr 42px;gap:6px;align-items:center;
+  background:#11161e;border:1px solid #1f2833;border-radius:10px;padding:6px 7px;transition:.15s}
+.set.done{background:rgba(139,241,74,.07);border-color:rgba(139,241,74,.32)}
+.setn{color:var(--muted);font-size:12px;font-weight:700;text-align:center}
+.inp{width:100%;background:#0c1117;border:1px solid #222c38;color:var(--txt);
+  border-radius:8px;padding:8px 9px;font-size:13.5px;font-variant-numeric:tabular-nums;outline:none}
+.inp:focus{border-color:var(--acc2)}
+.inp::placeholder{color:#4c5a6b}
+.check{height:34px;border-radius:9px;border:1px solid #2c3846;background:#0c1117;
+  color:#4c5a6b;font-size:16px;font-weight:800;cursor:pointer}
+.check.on{background:var(--acc);border-color:var(--acc);color:#0b1206}
+
+.restdock{
+  position:fixed;left:0;right:0;bottom:0;z-index:50;
+  padding:12px 14px calc(12px + env(safe-area-inset-bottom));
+  background:rgba(15,20,27,.97);backdrop-filter:blur(14px);
+  border-top:1px solid var(--line);
+}
+.restpresets{display:flex;align-items:center;gap:7px;flex-wrap:wrap;justify-content:center}
+.chip{background:var(--card2);border:1px solid var(--line);color:var(--txt);
+  padding:9px 14px;border-radius:11px;font-size:13.5px;font-weight:700;cursor:pointer;
+  font-variant-numeric:tabular-nums}
+.chip:active{background:var(--acc);color:#0b1206}
+.restcount{display:flex;align-items:center;gap:14px;justify-content:center}
+.restnum{font-size:34px;font-weight:800;color:var(--acc2);font-variant-numeric:tabular-nums;
+  min-width:96px;text-align:center;line-height:1}
+.restbar{flex:1;max-width:220px;height:6px;background:#0a0e14;border-radius:99px;overflow:hidden}
+.restbar i{display:block;height:100%;background:linear-gradient(90deg,var(--acc2),var(--acc));
+  width:100%;transition:width .2s linear}
+
+.modal{position:fixed;inset:0;z-index:100;background:rgba(5,8,12,.72);
+  display:none;align-items:flex-end;justify-content:center;backdrop-filter:blur(3px)}
+.modal.open{display:flex}
+.sheet{
+  width:100%;max-width:560px;max-height:88vh;overflow-y:auto;
+  background:var(--card);border:1px solid var(--line);
+  border-radius:20px 20px 0 0;padding:20px 18px calc(20px + env(safe-area-inset-bottom));
+  animation:up .22s ease;
+}
+@keyframes up{from{transform:translateY(28px);opacity:.4}to{transform:none;opacity:1}}
+.sheet h2{margin:0 0 16px;font-size:18px;letter-spacing:-.02em}
+.field{margin-bottom:13px}
+.field label{display:block;font-size:11.5px;letter-spacing:.05em;text-transform:uppercase;
+  color:var(--muted);margin-bottom:6px;font-weight:700}
+.field input,.field select{
+  width:100%;background:#0c1117;border:1px solid var(--line);color:var(--txt);
+  border-radius:11px;padding:12px 13px;font-size:15px;outline:none;
+}
+.field input:focus,.field select:focus{border-color:var(--acc2)}
+.tpl-row{display:grid;grid-template-columns:1fr 62px 78px 78px 32px;gap:6px;margin-bottom:6px}
+.tpl-row .inp{padding:9px}
+.tpl-row .del{background:transparent;border:1px solid #3a2630;color:var(--danger);
+  border-radius:8px;cursor:pointer;font-size:15px}
+
+.hist .exname{font-size:14.5px}
+.hist .right{text-align:right}
+.hist .right .mono{font-size:15px;font-weight:750;color:var(--acc)}
+
+/* perfil */
+.imc-box{
+  display:flex;align-items:center;gap:16px;
+  background:#0f141c;border:1px solid var(--line);border-radius:12px;padding:14px 16px;
+}
+.imc-num{font-size:34px;font-weight:800;line-height:1;letter-spacing:-.02em}
+.imc-tag{
+  font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;
+  padding:5px 10px;border-radius:99px;background:#1a2330;color:var(--muted);
+  transition:.2s;
+}
+.imc-tag.pos{background:rgba(139,241,74,.12);color:var(--acc)}
+.imc-tag.warn{background:rgba(255,176,32,.12);color:var(--warn)}
+.imc-tag.danger{background:rgba(255,93,93,.12);color:var(--danger)}
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="brand">GYM<b>LOG</b></div>
+  <nav>
+    <button data-nav="home">Inicio</button>
+    <button data-nav="profile">Perfil</button>
+    <button data-nav="history">Historial</button>
+  </nav>
+</header>
+
+<main id="view"></main>
+<div id="restDock" class="restdock hidden"></div>
+<div id="modal" class="modal"></div>
+
+<script>
+"use strict";
+
+const $ = s => document.querySelector(s);
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c =>
+  ({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;" }[c]));
+const pad = n => String(n).padStart(2, "0");
+const DB = {
+  get(k, d){ try { const v = localStorage.getItem(k); return v === null ? d : JSON.parse(v); } catch(e){ return d; } },
+  set(k, v){ try { localStorage.setItem(k, JSON.stringify(v)); } catch(e){} }
+};
+const fmtClock = ms => {
+  const t = Math.max(0, Math.floor(ms / 1000));
+  const h = Math.floor(t / 3600), m = Math.floor(t % 3600 / 60), s = t % 60;
+  return h ? `${h}:${pad(m)}:${pad(s)}` : `${pad(m)}:${pad(s)}`;
+};
+const fmtSecs = s => `${Math.floor(s / 60)}:${pad(s % 60)}`;
+const fmtShort = s => { const m = Math.floor(s/60), r = s%60; return m ? `${m}'${r ? r+'"' : ""}` : `${r}"`; };
+const fmtDate = ts => new Date(ts).toLocaleDateString("es-AR", { weekday:"short", day:"2-digit", month:"short" });
+const fmtTime = ts => new Date(ts).toLocaleTimeString("es-AR", { hour:"2-digit", minute:"2-digit" });
+const uid = () => Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
+
+/* ============================================================
+   IMC
+   ============================================================ */
+function calcIMC(weightKg, heightCm){
+  const w = parseFloat(weightKg), h = parseFloat(heightCm);
+  if (!w || !h || w < 20 || w > 400 || h < 100 || h > 250) return null;
+  const m = h / 100;
+  return w / (m * m);
+}
+function imcInfo(v){
+  if (v == null) return { label:"Sin datos", cls:"" };
+  if (v < 18.5)  return { label:"Bajo peso",   cls:"warn"   };
+  if (v < 25)    return { label:"Normal",      cls:"pos"    };
+  if (v < 30)    return { label:"Sobrepeso",   cls:"warn"   };
+  if (v < 35)    return { label:"Obesidad I",  cls:"danger" };
+  if (v < 40)    return { label:"Obesidad II", cls:"danger" };
+  return { label:"Obesidad III", cls:"danger" };
+}
+
+/* ============================================================
+   PLANTILLAS POR DEFECTO
+   ============================================================ */
+const DEFAULT_TEMPLATES = [
+  { id:"fullbody", name:"Full Body", exercises:[
+    { name:"Sentadilla",            sets:4, reps:"8-10",  rest:120 },
+    { name:"Press banca",           sets:4, reps:"8-10",  rest:120 },
+    { name:"Remo con barra",        sets:3, reps:"10-12", rest:90  },
+    { name:"Press militar",         sets:3, reps:"10-12", rest:90  },
+    { name:"Curl bíceps",           sets:3, reps:"12",    rest:60  },
+    { name:"Plancha",               sets:3, reps:"40 s",  rest:60  }
+  ]},
+  { id:"push", name:"Push · Empuje", exercises:[
+    { name:"Press banca",           sets:4, reps:"6-8",   rest:150 },
+    { name:"Press inclinado manc.", sets:3, reps:"10-12", rest:90  },
+    { name:"Aperturas",             sets:3, reps:"12-15", rest:60  },
+    { name:"Press militar",         sets:3, reps:"8-10",  rest:120 },
+    { name:"Elevaciones laterales", sets:3, reps:"15",    rest:60  },
+    { name:"Fondos en paralelas",   sets:3, reps:"10-12", rest:90  }
+  ]},
+  { id:"pull", name:"Pull · Tirón", exercises:[
+    { name:"Dominadas",             sets:4, reps:"6-10",  rest:150 },
+    { name:"Remo con barra",        sets:4, reps:"8-10",  rest:120 },
+    { name:"Jalón al pecho",        sets:3, reps:"10-12", rest:90  },
+    { name:"Face pull",             sets:3, reps:"15",    rest:60  },
+    { name:"Curl bíceps barra",     sets:3, reps:"10-12", rest:60  },
+    { name:"Curl martillo",         sets:3, reps:"12",    rest:60  }
+  ]},
+  { id:"legs", name:"Pierna", exercises:[
+    { name:"Sentadilla",            sets:4, reps:"6-8",   rest:150 },
+    { name:"Peso muerto rumano",    sets:3, reps:"8-10",  rest:120 },
+    { name:"Prensa",                sets:3, reps:"10-12", rest:90  },
+    { name:"Zancadas",              sets:3, reps:"12 x pierna", rest:90 },
+    { name:"Curl femoral",          sets:3, reps:"12-15", rest:60  },
+    { name:"Gemelos",               sets:4, reps:"15-20", rest:45  }
+  ]}
+];
+
+/* ============================================================
+   ESTADO
+   ============================================================ */
+const state = {
+  screen: "home",
+  profile:   DB.get("ft_profile", { weight:"", height:"", age:"" }),
+  templates: DB.get("ft_templates", DEFAULT_TEMPLATES),
+  history:   DB.get("ft_history", []),
+  session:   DB.get("ft_session", null),
+  timer:     DB.get("ft_timer", { running:false, elapsed:0, startedAt:null }),
+  rest:      { endsAt: null, total: 0 }
+};
+
+const persist = {
+  profile:   () => DB.set("ft_profile", state.profile),
+  templates: () => DB.set("ft_templates", state.templates),
+  history:   () => DB.set("ft_history", state.history),
+  session:   () => DB.set("ft_session", state.session),
+  timer:     () => DB.set("ft_timer", state.timer)
+};
+
+/* ============================================================
+   AUDIO
+   ============================================================ */
+let actx = null;
+function beep(){
+  try {
+    actx = actx || new (window.AudioContext || window.webkitAudioContext)();
+    if (actx.state === "suspended") actx.resume();
+    const now = actx.currentTime;
+    [0, 0.28, 0.56].forEach((off, i) => {
+      const o = actx.createOscillator(), g = actx.createGain();
+      o.type = "sine";
+      o.frequency.value = i === 2 ? 1100 : 880;
+      g.gain.setValueAtTime(0.0001, now + off);
+      g.gain.exponentialRampToValueAtTime(0.3, now + off + 0.02);
+      g.gain.exponentialRampToValueAtTime(0.0001, now + off + 0.22);
+      o.connect(g).connect(actx.destination);
+      o.start(now + off); o.stop(now + off + 0.24);
+    });
+    if (navigator.vibrate) navigator.vibrate([120, 80, 120, 80, 200]);
+  } catch(e){}
+}
+
+/* ============================================================
+   CRONÓMETROS
+   ============================================================ */
+function timerElapsed(){
+  const t = state.timer;
+  return t.elapsed + (t.running ? Date.now() - t.startedAt : 0);
+}
+function timerToggle(){
+  const t = state.timer;
+  if (t.running){ t.elapsed = timerElapsed(); t.running = false; t.startedAt = null; }
+  else { t.startedAt = Date.now(); t.running = true; }
+  persist.timer(); render();
+}
+function timerReset(){
+  state.timer = { running:false, elapsed:0, startedAt:null };
+  persist.timer(); render();
+}
+
+function restStart(secs){
+  state.rest.endsAt = Date.now() + secs * 1000;
+  state.rest.total  = secs * 1000;
+  renderRestDock();
+}
+function restAdd(ms){
+  if (!state.rest.endsAt) return;
+  state.rest.endsAt += ms;
+  state.rest.total  += ms;
+  renderRestDock();
+}
+function restStop(){ state.rest.endsAt = null; state.rest.total = 0; renderRestDock(); }
+
+/* ============================================================
+   NAVEGACIÓN
+   ============================================================ */
+function go(screen){ state.screen = screen; render(); window.scrollTo({ top:0, behavior:"smooth" }); }
+
+function render(){
+  document.querySelectorAll("[data-nav]").forEach(b =>
+    b.classList.toggle("on", b.dataset.nav === state.screen));
+
+  const view = $("#view");
+  if (state.screen === "workout" && state.session) view.innerHTML = renderWorkout();
+  else if (state.screen === "history")            view.innerHTML = renderHistory();
+  else if (state.screen === "profile")            view.innerHTML = renderProfile();
+  else                                            view.innerHTML = renderHome();
+
+  renderRestDock();
+  updateClockUI();
+}
+
+/* ---------- HOME ---------- */
+function renderHome(){
+  const enCurso = state.session;
+  return `
+    <div class="hero">
+      <h1>${enCurso ? "Tenés una sesión en curso" : "Registrá tu entrenamiento"}</h1>
+      <p>${enCurso
+        ? "Ya arrancaste una rutina. Podés continuarla o descartarla."
+        : "Elegí día, horario y plantilla. El cronómetro lo manejás vos."}</p>
+      ${enCurso
+        ? `<button class="btn acc big" data-act="resumeSession">Continuar sesión</button>`
+        : `<button class="btn acc big" data-act="newSession">Nueva sesión</button>`}
+    </div>
+
+    <div class="section-title">Plantillas</div>
+    ${state.templates.map(t => `
+      <div class="card">
+        <div class="row between">
+          <div>
+            <div class="exname">${esc(t.name)}</div>
+            <div class="lbl">${t.exercises.length} ejercicios · ${t.exercises.reduce((a,e)=>a+e.sets,0)} series</div>
+          </div>
+          <div class="row gap6">
+            <button class="btn ghost sm" data-act="editTemplate" data-id="${t.id}">Editar</button>
+            <button class="btn acc sm" data-act="quickStart" data-id="${t.id}">Empezar</button>
+          </div>
+        </div>
+      </div>`).join("")}
+    <button class="btn ghost big mt8" data-act="newTemplate">+ Crear plantilla</button>
+
+    <div class="section-title">Respaldo</div>
+    <div class="card">
+      <div class="row between" style="gap:8px">
+        <div style="flex:1;min-width:0">
+          <div class="exname">Tus datos</div>
+          <div class="lbl">Perfil · plantillas · historial</div>
+        </div>
+        <div class="row gap6">
+          <button class="btn ghost sm" data-act="importData">Importar</button>
+          <button class="btn acc sm" data-act="exportData">Exportar</button>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+/* ---------- PERFIL ---------- */
+function renderProfile(){
+  const p = state.profile;
+  const imcVal = calcIMC(p.weight, p.height);
+  const info = imcInfo(imcVal);
+  return `
+    <div class="hero compact">
+      <h1>Perfil</h1>
+      <p>Datos para contextualizar tus entrenamientos y el análisis con IA.</p>
+    </div>
+
+    <div class="card">
+      <div class="field">
+        <label>Peso (kg)</label>
+        <input type="number" step="0.1" min="20" max="400" id="pWeight"
+               value="${esc(p.weight ?? "")}" placeholder="Ej: 75.5">
+      </div>
+      <div class="field">
+        <label>Altura (cm)</label>
+        <input type="number" step="1" min="100" max="250" id="pHeight"
+               value="${esc(p.height ?? "")}" placeholder="Ej: 178">
+      </div>
+      <div class="field" style="margin-bottom:0">
+        <label>Edad</label>
+        <input type="number" step="1" min="10" max="120" id="pAge"
+               value="${esc(p.age ?? "")}" placeholder="Ej: 32">
+      </div>
+    </div>
+
+    <div class="section-title">Índice de Masa Corporal</div>
+    <div class="card">
+      <div class="imc-box">
+        <div class="imc-num mono" id="imcNum" style="color:${imcVal ? "var(--txt)" : "var(--muted)"}">
+          ${imcVal ? imcVal.toFixed(1) : "—"}
+        </div>
+        <div style="flex:1">
+          <div class="lbl" style="margin-bottom:6px">Clasificación</div>
+          <span class="imc-tag ${info.cls}" id="imcTag">${info.label}</span>
+        </div>
+      </div>
+      <div class="lbl mt12" style="line-height:1.5">
+        IMC = peso ÷ altura² · Referencia OMS.
+        No distingue masa muscular de grasa; úsalo como orientación general.
+      </div>
+    </div>
+
+    <button class="btn acc big" data-act="saveProfile" id="saveProfileBtn">Guardar perfil</button>
+  `;
+}
+
+/* ---------- WORKOUT ---------- */
+function renderWorkout(){
+  const s = state.session;
+  const totalSets = s.exercises.reduce((a,e) => a + e.sets.length, 0);
+  const doneSets  = s.exercises.reduce((a,e) => a + e.sets.filter(x => x.done).length, 0);
+  const pct = totalSets ? Math.round(doneSets / totalSets * 100) : 0;
+  const running = state.timer.running;
+
+  return `
+  <div class="sticky-head">
+    <div class="row between">
+      <div>
+        <div class="lbl">Sesión</div>
+        <div class="title-sm">${esc(s.templateName)}</div>
+        <div class="lbl">${fmtDate(s.startedAt)} · ${fmtTime(s.startedAt)}</div>
+      </div>
+      <div style="text-align:right">
+        <div class="timer ${running ? "" : "paused"}" id="clock">${fmtClock(timerElapsed())}</div>
+        <div class="row gap6 mt8" style="justify-content:flex-end">
+          <button class="btn ghost sm" data-act="timerToggle">${running ? "Pausar" : "Iniciar"}</button>
+          <button class="btn ghost sm" data-act="timerReset">Reset</button>
+        </div>
+      </div>
+    </div>
+    <div class="progress"><i style="width:${pct}%"></i></div>
+    <div class="lbl mt8" style="text-align:right">${doneSets}/${totalSets} series · ${pct}%</div>
+  </div>
+
+  ${s.exercises.map((ex, i) => renderExercise(ex, i)).join("")}
+
+  <button class="btn ghost big mt8" data-act="addExercise">+ Agregar ejercicio</button>
+
+  <div class="row gap8 mt12">
+    <button class="btn acc" style="flex:1" data-act="finish">Terminar y guardar</button>
+    <button class="btn danger" data-act="discard">Descartar</button>
+  </div>
+  <div style="height:20px"></div>`;
+}
+
+function renderExercise(ex, i){
+  return `
+  <div class="card">
+    <div class="row between">
+      <div>
+        <div class="exname">${esc(ex.name)}</div>
+        <div class="lbl">${ex.sets.length} × ${esc(ex.reps)} · descanso ${fmtShort(ex.rest)}</div>
+      </div>
+      <button class="btn rest" data-act="restGo" data-secs="${ex.rest}">⏱ ${fmtShort(ex.rest)}</button>
+    </div>
+    <div class="sets">
+      ${ex.sets.map((st, j) => `
+        <div class="set ${st.done ? "done" : ""}">
+          <span class="setn">${j+1}</span>
+          <input class="inp" type="number" inputmode="decimal" step="0.5" min="0"
+                 placeholder="kg" value="${st.weight ?? ""}"
+                 data-ex="${i}" data-set="${j}" data-f="weight">
+          <input class="inp" type="text" inputmode="text"
+                 placeholder="${esc(ex.reps)}" value="${st.reps ?? ""}"
+                 data-ex="${i}" data-set="${j}" data-f="reps">
+          <button class="check ${st.done ? "on" : ""}" data-act="toggleSet" data-ex="${i}" data-set="${j}">✓</button>
+        </div>`).join("")}
+    </div>
+    <div class="row gap6 mt8">
+      <button class="btn ghost xs" data-act="addSet" data-ex="${i}">+ Serie</button>
+      <button class="btn ghost xs" data-act="delSet" data-ex="${i}">− Serie</button>
+    </div>
+  </div>`;
+}
+
+/* ---------- HISTORIAL ---------- */
+function renderHistory(){
+  if (!state.history.length)
+    return `<div class="empty">Todavía no guardaste ninguna sesión.<br>Cuando termines una, aparece acá.</div>`;
+
+  return `<div class="section-title">Historial</div>` +
+    state.history.slice().reverse().map(h => `
+      <div class="card hist">
+        <div class="row between">
+          <div>
+            <div class="exname">${esc(h.templateName)}</div>
+            <div class="lbl">${fmtDate(h.date)} · ${fmtTime(h.date)}</div>
+          </div>
+          <div class="right">
+            <div class="mono">${fmtClock(h.durationMs)}</div>
+            <div class="lbl">${h.doneSets}/${h.totalSets} series</div>
+          </div>
+        </div>
+        <div class="lbl mt8">Volumen total: ${h.volume.toLocaleString("es-AR")} kg</div>
+      </div>`).join("") +
+    `<button class="btn danger big mt12" data-act="clearHistory">Borrar historial</button>`;
+}
+
+/* ---------- REST DOCK ---------- */
+function renderRestDock(){
+  const dock = $("#restDock");
+  if (state.screen !== "workout" || !state.session){ dock.classList.add("hidden"); return; }
+  dock.classList.remove("hidden");
+
+  if (state.rest.endsAt){
+    const left = Math.max(0, state.rest.endsAt - Date.now());
+    dock.innerHTML = `
+      <div class="restcount">
+        <div class="restnum" id="restNum">${fmtSecs(Math.ceil(left / 1000))}</div>
+        <div class="restbar"><i id="restBar" style="width:${state.rest.total ? (left / state.rest.total * 100) : 0}%"></i></div>
+        <button class="btn ghost sm" data-act="restAdd">+15s</button>
+        <button class="btn ghost sm" data-act="restStop">Detener</button>
+      </div>`;
+  } else {
+    dock.innerHTML = `
+      <div class="restpresets">
+        <span class="lbl" style="margin-right:4px">Descanso</span>
+        ${[45, 60, 90, 120, 180].map(s =>
+          `<button class="chip" data-act="restGo" data-secs="${s}">${fmtShort(s)}</button>`).join("")}
+      </div>`;
+  }
+}
+
+/* ---------- TICK ---------- */
+function updateClockUI(){
+  const el = $("#clock");
+  if (el){
+    el.textContent = fmtClock(timerElapsed());
+    el.classList.toggle("paused", !state.timer.running);
+  }
+}
+function tick(){
+  updateClockUI();
+  if (state.rest.endsAt){
+    const left = state.rest.endsAt - Date.now();
+    const num = $("#restNum"), bar = $("#restBar");
+    if (left <= 0){
+      state.rest.endsAt = null; state.rest.total = 0;
+      beep(); renderRestDock();
+    } else {
+      if (num) num.textContent = fmtSecs(Math.ceil(left / 1000));
+      if (bar) bar.style.width = (state.rest.total ? left / state.rest.total * 100 : 0) + "%";
+    }
+  }
+}
+setInterval(tick, 200);
+
+/* ============================================================
+   MODALES
+   ============================================================ */
+function openModal(html){
+  const m = $("#modal");
+  m.innerHTML = `<div class="sheet">${html}</div>`;
+  m.classList.add("open");
+}
+function closeModal(){ const m = $("#modal"); m.classList.remove("open"); m.innerHTML = ""; }
+
+function modalNewSession(preId){
+  const now = new Date();
+  const iso = `${now.getFullYear()}-${pad(now.getMonth()+1)}-${pad(now.getDate())}`;
+  const hm  = `${pad(now.getHours())}:${pad(now.getMinutes())}`;
+  openModal(`
+    <h2>Nueva sesión</h2>
+    <div class="field">
+      <label>Plantilla</label>
+      <select id="mTemplate">
+        <option value="">— Sesión vacía —</option>
+        ${state.templates.map(t => `<option value="${t.id}" ${t.id === preId ? "selected" : ""}>${esc(t.name)}</option>`).join("")}
+      </select>
+    </div>
+    <div class="field"><label>Fecha</label><input type="date" id="mDate" value="${iso}"></div>
+    <div class="field"><label>Hora de inicio</label><input type="time" id="mTime" value="${hm}"></div>
+    <button class="btn acc big" data-act="startSession">Comenzar entrenamiento</button>
+    <button class="btn ghost big mt8" data-act="closeModal">Cancelar</button>
+  `);
+}
+
+function modalExercise(exIdx){
+  const isEdit = exIdx !== undefined && exIdx !== null;
+  const ex = isEdit ? state.session.exercises[exIdx] : { name:"", reps:"8-12", rest:90, sets:[] };
+  openModal(`
+    <h2>${isEdit ? "Editar ejercicio" : "Agregar ejercicio"}</h2>
+    <div class="field"><label>Nombre</label><input id="eName" value="${esc(ex.name)}" placeholder="Ej: Press banca"></div>
+    <div class="field"><label>Series</label><input id="eSets" type="number" min="1" max="20" value="${ex.sets.length || 3}"></div>
+    <div class="field"><label>Reps objetivo</label><input id="eReps" value="${esc(ex.reps)}" placeholder="Ej: 8-12"></div>
+    <div class="field"><label>Descanso (segundos)</label><input id="eRest" type="number" min="10" max="600" step="5" value="${ex.rest}"></div>
+    <button class="btn acc big" data-act="saveExercise" data-idx="${isEdit ? exIdx : ""}">${isEdit ? "Guardar" : "Agregar"}</button>
+    <button class="btn ghost big mt8" data-act="closeModal">Cancelar</button>
+  `);
+}
+
+function modalTemplate(tplId){
+  const isNew = !tplId;
+  const tpl = isNew
+    ? { id: uid(), name:"", exercises:[] }
+    : JSON.parse(JSON.stringify(state.templates.find(t => t.id === tplId)));
+
+  openModal(`
+    <h2>${isNew ? "Nueva plantilla" : "Editar plantilla"}</h2>
+    <div class="field"><label>Nombre</label><input id="tName" value="${esc(tpl.name)}" placeholder="Ej: Torso A"></div>
+    <label class="lbl" style="display:block;margin:16px 0 8px">Ejercicios</label>
+    <div id="tplList">
+      ${tpl.exercises.map((e, i) => `
+        <div class="tpl-row" data-row="${i}">
+          <input class="inp" data-f="name" placeholder="Ejercicio" value="${esc(e.name)}">
+          <input class="inp" data-f="sets" type="number" min="1" placeholder="Ser" value="${e.sets}">
+          <input class="inp" data-f="reps" placeholder="Reps" value="${esc(e.reps)}">
+          <input class="inp" data-f="rest" type="number" min="10" step="5" placeholder="Desc" value="${e.rest}">
+          <button class="del" data-act="tplDelRow" data-i="${i}">×</button>
+        </div>`).join("")}
+    </div>
+    <button class="btn ghost sm mt8" data-act="tplAddRow">+ Agregar fila</button>
+    <div style="height:14px"></div>
+    <button class="btn acc big" data-act="saveTemplate" data-id="${tpl.id}" data-new="${isNew ? 1 : 0}">Guardar plantilla</button>
+    ${isNew ? "" : `<button class="btn danger big mt8" data-act="deleteTemplate" data-id="${tpl.id}">Eliminar plantilla</button>`}
+    <button class="btn ghost big mt8" data-act="closeModal">Cancelar</button>
+  `);
+}
+
+/* ============================================================
+   EXPORTAR / IMPORTAR
+   ============================================================ */
+function exportData(){
+  const data = {
+    version: 1,
+    app: "GymLog",
+    exportedAt: new Date().toISOString(),
+    profile: state.profile,
+    templates: state.templates,
+    history: state.history
+  };
+  const blob = new Blob([JSON.stringify(data, null, 2)], { type:"application/json" });
+  const url  = URL.createObjectURL(blob);
+  const a    = document.createElement("a");
+  const stamp = new Date().toISOString().slice(0, 10);
+  a.href = url;
+  a.download = `gymlog-backup-${stamp}.json`;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+
+function triggerImport(){
+  if (state.session){
+    alert("Terminá o descartá la sesión actual antes de importar.");
+    return;
+  }
+  const input = document.createElement("input");
+  input.type = "file";
+  input.accept = ".json,application/json";
+  input.onchange = e => {
+    const file = e.target.files && e.target.files[0];
+    if (file) importData(file);
+  };
+  input.click();
+}
+
+function importData(file){
+  const reader = new FileReader();
+  reader.onload = e => {
+    try {
+      const data = JSON.parse(e.target.result);
+      if (!data || typeof data !== "object") throw new Error("Archivo inválido");
+      if (!data.templates && !data.history && !data.profile)
+        throw new Error("No parece un respaldo de GymLog");
+
+      const ok = confirm(
+        "Esto REEMPLAZARÁ tu perfil, plantillas e historial actuales.\n\n" +
+        "Recomendación: exportá primero un respaldo por las dudas.\n\n" +
+        "¿Continuar?"
+      );
+      if (!ok) return;
+
+      state.profile   = data.profile   || { weight:"", height:"", age:"" };
+      state.templates = Array.isArray(data.templates) ? data.templates : DEFAULT_TEMPLATES;
+      state.history   = Array.isArray(data.history)   ? data.history   : [];
+
+      persist.profile();
+      persist.templates();
+      persist.history();
+
+      render();
+      alert("Datos importados correctamente.");
+    } catch(err) {
+      alert("Error al importar: " + err.message);
+    }
+  };
+  reader.readAsText(file);
+}
+
+/* ============================================================
+   LÓGICA DE SESIÓN
+   ============================================================ */
+function startSession(templateId, startTs){
+  const tpl = templateId ? state.templates.find(t => t.id === templateId) : null;
+  const exercises = tpl
+    ? tpl.exercises.map(e => ({
+        name: e.name, reps: e.reps, rest: e.rest,
+        sets: Array.from({ length: e.sets }, () => ({ done:false, weight:"", reps:"" }))
+      }))
+    : [];
+
+  state.session = {
+    id: uid(),
+    templateName: tpl ? tpl.name : "Sesión libre",
+    startedAt: startTs,
+    exercises
+  };
+  state.timer = { running:true, elapsed:0, startedAt: Date.now() };
+  persist.session(); persist.timer();
+  closeModal();
+  go("workout");
+}
+
+function finishSession(){
+  const s = state.session;
+  const totalSets = s.exercises.reduce((a,e) => a + e.sets.length, 0);
+  const doneSets  = s.exercises.reduce((a,e) => a + e.sets.filter(x => x.done).length, 0);
+  let volume = 0;
+  s.exercises.forEach(e => e.sets.forEach(st => {
+    if (st.done){
+      const w = parseFloat(st.weight) || 0;
+      const r = parseFloat(st.reps)   || 0;
+      volume += w * r;
+    }
+  }));
+
+  state.history.push({
+    id: s.id,
+    date: s.startedAt,
+    templateName: s.templateName,
+    durationMs: timerElapsed(),
+    totalSets, doneSets,
+    volume: Math.round(volume),
+    exercises: s.exercises
+  });
+  persist.history();
+
+  state.session = null; persist.session();
+  state.timer = { running:false, elapsed:0, startedAt:null }; persist.timer();
+  restStop();
+  go("home");
+}
+
+/* ============================================================
+   EVENTOS
+   ============================================================ */
+document.addEventListener("click", e => {
+  if (e.target.id === "modal") { closeModal(); return; }
+
+  const nav = e.target.closest("[data-nav]");
+  if (nav){ go(nav.dataset.nav); return; }
+
+  const btn = e.target.closest("[data-act]");
+  if (!btn) return;
+  const act = btn.dataset.act;
+
+  /* sesión */
+  if (act === "newSession")   return modalNewSession();
+  if (act === "quickStart")   return startSession(btn.dataset.id, Date.now());
+  if (act === "resumeSession") return go("workout");
+  if (act === "closeModal")   return closeModal();
+
+  if (act === "startSession"){
+    const tplId = $("#mTemplate").value;
+    const d = $("#mDate").value, h = $("#mTime").value;
+    const ts = (d && h) ? new Date(`${d}T${h}`).getTime() : Date.now();
+    return startSession(tplId, ts);
+  }
+
+  if (act === "finish"){
+    if (confirm("¿Terminar la sesión y guardarla en el historial?")) finishSession();
+    return;
+  }
+  if (act === "discard"){
+    if (confirm("¿Descartar la sesión? Se pierde todo lo registrado.")){
+      state.session = null; persist.session();
+      state.timer = { running:false, elapsed:0, startedAt:null }; persist.timer();
+      restStop(); go("home");
+    }
+    return;
+  }
+
+  /* cronómetro general */
+  if (act === "timerToggle") return timerToggle();
+  if (act === "timerReset"){
+    if (confirm("¿Reiniciar el cronómetro general a 00:00?")) timerReset();
+    return;
+  }
+
+  /* descanso */
+  if (act === "restGo")   return restStart(parseInt(btn.dataset.secs, 10));
+  if (act === "restAdd")  return restAdd(15000);
+  if (act === "restStop") return restStop();
+
+  /* ejercicios */
+  if (act === "toggleSet"){
+    const ex = state.session.exercises[+btn.dataset.ex];
+    const st = ex.sets[+btn.dataset.set];
+    st.done = !st.done;
+    persist.session();
+    if (st.done) restStart(ex.rest);
+    render();
+    return;
+  }
+  if (act === "addSet"){
+    const ex = state.session.exercises[+btn.dataset.ex];
+    const last = ex.sets[ex.sets.length - 1] || { weight:"", reps:"" };
+    ex.sets.push({ done:false, weight:last.weight || "", reps:last.reps || "" });
+    persist.session(); render(); return;
+  }
+  if (act === "delSet"){
+    const ex = state.session.exercises[+btn.dataset.ex];
+    if (ex.sets.length > 1){ ex.sets.pop(); persist.session(); render(); }
+    return;
+  }
+  if (act === "addExercise") return modalExercise(null);
+  if (act === "saveExercise"){
+    const idx = btn.dataset.idx;
+    const data = {
+      name: $("#eName").value.trim() || "Ejercicio",
+      sets: Math.max(1, parseInt($("#eSets").value, 10) || 3),
+      reps: $("#eReps").value.trim() || "8-12",
+      rest: Math.max(10, parseInt($("#eRest").value, 10) || 90)
+    };
+    if (idx === ""){
+      state.session.exercises.push({
+        name: data.name, reps: data.reps, rest: data.rest,
+        sets: Array.from({ length: data.sets }, () => ({ done:false, weight:"", reps:"" }))
+      });
+    } else {
+      const ex = state.session.exercises[+idx];
+      ex.name = data.name; ex.reps = data.reps; ex.rest = data.rest;
+      while (ex.sets.length < data.sets) ex.sets.push({ done:false, weight:"", reps:"" });
+      while (ex.sets.length > data.sets) ex.sets.pop();
+    }
+    persist.session(); closeModal(); render(); return;
+  }
+
+  /* plantillas */
+  if (act === "newTemplate")   return modalTemplate(null);
+  if (act === "editTemplate")  return modalTemplate(btn.dataset.id);
+  if (act === "tplAddRow"){
+    const list = $("#tplList");
+    const i = list.children.length;
+    const div = document.createElement("div");
+    div.className = "tpl-row"; div.dataset.row = i;
+    div.innerHTML = `
+      <input class="inp" data-f="name" placeholder="Ejercicio" value="">
+      <input class="inp" data-f="sets" type="number" min="1" placeholder="Ser" value="3">
+      <input class="inp" data-f="reps" placeholder="Reps" value="8-12">
+      <input class="inp" data-f="rest" type="number" min="10" step="5" placeholder="Desc" value="90">
+      <button class="del" data-act="tplDelRow" data-i="${i}">×</button>`;
+    list.appendChild(div);
+    return;
+  }
+  if (act === "tplDelRow"){
+    const row = btn.closest(".tpl-row");
+    if (row) row.remove();
+    return;
+  }
+  if (act === "saveTemplate"){
+    const name = $("#tName").value.trim();
+    if (!name){ alert("Poné un nombre a la plantilla."); return; }
+    const exercises = [...document.querySelectorAll("#tplList .tpl-row")].map(r => ({
+      name: r.querySelector('[data-f="name"]').value.trim() || "Ejercicio",
+      sets: Math.max(1, parseInt(r.querySelector('[data-f="sets"]').value, 10) || 3),
+      reps: r.querySelector('[data-f="reps"]').value.trim() || "8-12",
+      rest: Math.max(10, parseInt(r.querySelector('[data-f="rest"]').value, 10) || 90)
+    })).filter(e => e.name);
+    const id = btn.dataset.id;
+    if (btn.dataset.new === "1"){
+      state.templates.push({ id, name, exercises });
+    } else {
+      const t = state.templates.find(x => x.id === id);
+      t.name = name; t.exercises = exercises;
+    }
+    persist.templates(); closeModal(); render(); return;
+  }
+  if (act === "deleteTemplate"){
+    if (!confirm("¿Eliminar esta plantilla?")) return;
+    state.templates = state.templates.filter(t => t.id !== btn.dataset.id);
+    persist.templates(); closeModal(); render(); return;
+  }
+
+  /* historial */
+  if (act === "clearHistory"){
+    if (confirm("¿Borrar todo el historial? No se puede deshacer.")){
+      state.history = []; persist.history(); render();
+    }
+    return;
+  }
+
+  /* perfil */
+  if (act === "saveProfile"){
+    state.profile = {
+      weight: $("#pWeight").value,
+      height: $("#pHeight").value,
+      age:    $("#pAge").value
+    };
+    persist.profile();
+    btn.textContent = "✓ Perfil guardado";
+    setTimeout(() => { btn.textContent = "Guardar perfil"; }, 1600);
+    return;
+  }
+
+  /* respaldo */
+  if (act === "exportData") return exportData();
+  if (act === "importData") return triggerImport();
+});
+
+/* inputs: pesos/reps sin re-render + preview IMC en vivo */
+$("#view").addEventListener("input", e => {
+  // pesos/reps
+  const inp = e.target.closest("input[data-ex]");
+  if (inp && state.session){
+    const ex = state.session.exercises[+inp.dataset.ex];
+    const st = ex.sets[+inp.dataset.set];
+    if (ex && st){ st[inp.dataset.f] = inp.value; persist.session(); }
+    return;
+  }
+  // preview IMC
+  if (e.target.id === "pWeight" || e.target.id === "pHeight"){
+    const w = $("#pWeight") ? $("#pWeight").value : "";
+    const h = $("#pHeight") ? $("#pHeight").value : "";
+    const v = calcIMC(w, h);
+    const num = $("#imcNum"), tag = $("#imcTag");
+    const info = imcInfo(v);
+    if (num){
+      num.textContent = v ? v.toFixed(1) : "—";
+      num.style.color = v ? "var(--txt)" : "var(--muted)";
+    }
+    if (tag){
+      tag.textContent = info.label;
+      tag.className = "imc-tag " + info.cls;
+    }
+  }
+});
+
+/* ============================================================
+   ARRANQUE
+   ============================================================ */
+if (state.session) state.screen = "workout";
+persist.templates();
+render();
+
+/* PWA: registrar service worker */
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("./sw.js").catch(() => {});
+  });
+}
+</script>
+</body>
+</html>
