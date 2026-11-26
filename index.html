@@ -170,6 +170,7 @@ main{padding:16px;max-width:720px;margin:0 auto}
 <body>
 
 <header class="topbar">
+ <button id="installBtn" style="display:none; background:var(--acc2); color:#000; border:none; padding:6px 10px; border-radius:8px; font-weight:bold; font-size:12px; margin-right:10px;">Instalar App</button>
   <div class="brand">GYM<b>LOG</b></div>
   <nav>
     <button data-nav="home">Inicio</button>
@@ -993,6 +994,25 @@ persist.templates();
 render();
 
 if ("serviceWorker" in navigator) {
+  // Lógica del botón de instalación
+let deferredPrompt;
+const installBtn = document.getElementById("installBtn");
+
+window.addEventListener("beforeinstallprompt", (e) => {
+  e.preventDefault();
+  deferredPrompt = e;
+  if (installBtn) installBtn.style.display = "block";
+});
+
+if (installBtn) {
+  installBtn.addEventListener("click", async () => {
+    if (!deferredPrompt) return;
+    deferredPrompt.prompt();
+    const { outcome } = await deferredPrompt.userChoice;
+    if (outcome === "accepted") installBtn.style.display = "none";
+    deferredPrompt = null;
+  });
+}
   window.addEventListener("load", () => {
     navigator.serviceWorker.register("./sw.js").catch(() => {});
   });
