@@ -196,23 +196,28 @@ textarea.inp{font-family:inherit;resize:vertical;min-height:40px}
 .focus-meta{ font-size:12px; color:var(--acc2); font-weight:700; margin-top:6px; display:flex; justify-content:center; gap:8px;}
 .focus-meta span{ background:rgba(77,214,240,.1); padding:3px 8px; border-radius:6px; border:1px solid rgba(77,214,240,.2);}
 
-/* Reloj de Descanso */
+/* Reloj de Descanso (Gigante y Centrado) */
 .focus-timer-container{
-  position:relative; width:180px; height:180px; margin:0 auto 24px;
+  position:relative; width:220px; height:220px; margin:20px auto 32px;
   display:flex; flex-direction:column; align-items:center; justify-content:center;
+  transition: all 0.3s ease;
 }
 .focus-timer-text{
-  font-size:48px; font-weight:800; font-variant-numeric:tabular-nums;
+  font-size:56px; font-weight:800; font-variant-numeric:tabular-nums;
   color:var(--acc2); text-shadow:0 0 20px rgba(77,214,240,.4); z-index:10;
+  transition: color 0.3s, font-size 0.3s;
 }
 .focus-timer-label{
-  font-size:12px; text-transform:uppercase; font-weight:800;
-  letter-spacing:.1em; color:var(--acc2); z-index:10; margin-top:4px;
+  font-size:14px; text-transform:uppercase; font-weight:800;
+  letter-spacing:.1em; color:var(--acc2); z-index:10; margin-top:6px;
 }
 .focus-circle{ position:absolute; top:0; left:0; width:100%; height:100%; transform:rotate(-90deg);}
 .focus-circle circle{ fill:none; stroke-width:8; stroke-linecap:round; }
 .focus-circle .bg{ stroke:rgba(77,214,240,.1); }
 .focus-circle .fg{ stroke:var(--acc2); transition:stroke-dashoffset .2s linear;}
+
+/* Icono central cuando no está descansando */
+.focus-icon{ font-size:72px; margin-bottom:16px; text-align:center; }
 
 /* Controles de Peso y Reps (Gigantes) */
 .focus-controls{ display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:24px;}
@@ -243,7 +248,7 @@ textarea.inp{font-family:inherit;resize:vertical;min-height:40px}
 
 <header class="topbar">
  <button id="installBtn" style="display:none; background:var(--acc2); color:#000; border:none; padding:6px 10px; border-radius:8px; font-weight:bold; font-size:12px; margin-right:10px;">Instalar App</button>
-  <div class="brand">GYM<b>LOG</b> <span>v2.4</span></div>
+  <div class="brand">GYM<b>LOG</b> <span>v2.5</span></div>
   <nav>
     <button data-nav="home">Inicio</button>
     <button data-nav="profile">Perfil</button>
@@ -669,12 +674,23 @@ function tick(){
       beep(); 
       renderRestDock();
       if (state.focus.resting) {
+        state.focus.resting = false;
         renderFocusContent(); // Al terminar la pausa, mostramos los controles
       }
     } else {
       if (num) num.textContent = fmtSecs(Math.ceil(left / 1000));
       if (bar) bar.style.width = (state.rest.total ? left / state.rest.total * 100 : 0) + "%";
-      updateFocusClock(); // Actualizar los números del reloj en el modal
+      
+      // Actualizar números del reloj en el modal si está resting
+      if (state.focus.resting) {
+        const clock = $("#focusClock");
+        if (clock) clock.textContent = fmtSecs(Math.ceil(left / 1000));
+        const circle = $("#focusRing");
+        if (circle) {
+          const pct = left / state.rest.total;
+          circle.setAttribute("stroke-dashoffset", 283 - (283 * pct));
+        }
+      }
     }
   }
 }
@@ -684,6 +700,10 @@ setInterval(tick, 200);
    VISTA DE ENFOQUE (FOCUS MODE DINÁMICO)
    ============================================================ */
 function openFocus(exIdx, setIdx) {
+  // Si abrimos una serie manualmente y hay un descanso corriendo, lo detenemos para no confundir
+  if (!state.focus.resting) {
+    restStop();
+  }
   state.focus = { exIdx, setIdx, resting: false };
   renderFocusContent();
   $("#focusModal").classList.add("open");
@@ -699,12 +719,11 @@ function renderFocusContent() {
   const isLastSet = setIdx >= ex.sets.length - 1;
   const isResting = state.focus.resting;
 
-  let timerHtml = "";
-  let controlsHtml = "";
+  let bodyHtml = "";
 
   if (isResting) {
     // ESTADO: PAUSA / DESCANSO
-    timerHtml = `
+    bodyHtml = `
       <div class="focus-timer-container">
         <svg class="focus-circle" viewBox="0 0 100 100">
           <circle class="bg" cx="50" cy="50" r="45"></circle>
@@ -714,12 +733,10 @@ function renderFocusContent() {
         <div class="focus-timer-label">Pausa</div>
       </div>
     `;
-    // No controls while resting
-    controlsHtml = `<div style="height: 120px;"></div>`; 
   } else {
     // ESTADO: LISTO PARA LA SERIE
-    timerHtml = `<div style="height: 60px; display:flex; align-items:center; justify-content:center; font-size:40px;">💪</div>`;
-    controlsHtml = `
+    bodyHtml = `
+      <div class="focus-icon">💪</div>
       <div class="focus-controls">
         <div class="focus-control-box">
           <button class="focus-btn-step" data-act="focusStep" data-f="weight" data-dir="-1">−</button>
@@ -742,6 +759,19 @@ function renderFocusContent() {
     `;
   }
 
+  let btnText = "✓ Completar Serie";
+  let btnClass = "";
+  let btnAct = "focusComplete";
+
+  if (isResting) {
+    btnText = "Terminar Pausa";
+    btnAct = "finishPause";
+  } else if (isLastSet) {
+    btnText = "✓ Cerrar y Finalizar";
+    btnClass = "close-btn";
+    btnAct = "focusCloseDone";
+  }
+
   $("#focusModal").innerHTML = `
     <div class="focus-sheet">
       <div class="focus-header">
@@ -753,17 +783,18 @@ function renderFocusContent() {
         </div>
       </div>
 
-      ${timerHtml}
-      ${controlsHtml}
+      ${bodyHtml}
 
-      <button class="focus-btn-check ${isLastSet && !isResting ? 'close-btn' : ''}" data-act="${isLastSet && !isResting ? 'focusCloseDone' : 'focusComplete'}" data-ex="${exIdx}" data-set="${setIdx}">
-        ${isResting ? 'Terminar Pausa' : (isLastSet ? '✓ Cerrar y Finalizar' : '✓ Completar Serie')}
+      <button class="focus-btn-check ${btnClass}" data-act="${btnAct}" data-ex="${exIdx}" data-set="${setIdx}">
+        ${btnText}
       </button>
     </div>
   `;
 
   if (isResting) {
-    updateFocusClock();
+    const left = Math.max(0, state.rest.endsAt - Date.now());
+    const clock = $("#focusClock");
+    if (clock) clock.textContent = fmtSecs(Math.ceil(left / 1000));
   }
 }
 
@@ -788,20 +819,6 @@ function focusStep(field, dir) {
   
   if (field === "weight") $("#focusWeight").textContent = st[field];
   if (field === "reps") $("#focusReps").textContent = st[field];
-}
-
-function updateFocusClock() {
-  const clock = $("#focusClock");
-  if (!clock || !state.rest.endsAt) return;
-
-  const left = Math.max(0, state.rest.endsAt - Date.now());
-  clock.textContent = fmtSecs(Math.ceil(left / 1000));
-  
-  const circle = $("#focusRing");
-  if (circle) {
-    const pct = left / state.rest.total;
-    circle.setAttribute("stroke-dashoffset", 283 - (283 * pct));
-  }
 }
 
 /* ============================================================
@@ -1007,6 +1024,13 @@ document.addEventListener("click", e => {
   if (act === "closeFocus") return closeFocus();
   if (act === "focusStep") return focusStep(btn.dataset.f, parseInt(btn.dataset.dir));
   
+  if (act === "finishPause") {
+    // Terminar pausa y mostrar controles sin reiniciar el tiempo de descanso
+    state.focus.resting = false;
+    renderFocusContent();
+    return;
+  }
+
   if (act === "focusComplete") {
     const exIdx = +btn.dataset.ex;
     const setIdx = +btn.dataset.set;
