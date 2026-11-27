@@ -34,8 +34,9 @@ body{
   background:linear-gradient(180deg,rgba(13,17,23,.96),rgba(13,17,23,.78));
   backdrop-filter:blur(12px); border-bottom:1px solid var(--line);
 }
-.brand{font-weight:800;letter-spacing:.14em;font-size:15px}
+.brand{font-weight:800;letter-spacing:.14em;font-size:15px;display:flex;align-items:baseline;gap:4px}
 .brand b{color:var(--acc)}
+.brand span{font-size:10px;color:var(--muted);font-weight:400;letter-spacing:0}
 .topbar nav{display:flex;gap:6px}
 .topbar nav button{
   background:transparent;border:1px solid var(--line);color:var(--muted);
@@ -181,7 +182,7 @@ textarea.inp{font-family:inherit;resize:vertical;min-height:40px}
 
 <header class="topbar">
  <button id="installBtn" style="display:none; background:var(--acc2); color:#000; border:none; padding:6px 10px; border-radius:8px; font-weight:bold; font-size:12px; margin-right:10px;">Instalar App</button>
-  <div class="brand">GYM<b>LOG</b></div>
+  <div class="brand">GYM<b>LOG</b> <span>v2.0</span></div>
   <nav>
     <button data-nav="home">Inicio</button>
     <button data-nav="profile">Perfil</button>
