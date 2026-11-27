@@ -79,7 +79,6 @@ main{padding:16px;max-width:720px;margin:0 auto}
   padding:8px 12px;font-size:12.5px;border-radius:10px;font-weight:700;white-space:nowrap}
 .btn.focus-btn{background:rgba(139,241,74,.1);border:1px solid rgba(139,241,74,.3);color:var(--acc);padding:6px 10px;border-radius:8px;font-weight:700;font-size:16px;cursor:pointer;}
 
-/* Cabecera de sesión */
 .sticky-head{
   position:sticky;top:57px;z-index:30;
   background:rgba(13,17,23,.96);backdrop-filter:blur(14px);
@@ -111,7 +110,6 @@ textarea.inp{font-family:inherit;resize:vertical;min-height:40px}
   color:#4c5a6b;font-size:16px;font-weight:800;cursor:pointer}
 .check.on{background:var(--acc);border-color:var(--acc);color:#0b1206}
 
-/* Dock de descanso */
 .restdock{
   position:fixed;left:0;right:0;bottom:0;z-index:50;
   padding:12px 14px calc(12px + env(safe-area-inset-bottom));
@@ -132,7 +130,7 @@ textarea.inp{font-family:inherit;resize:vertical;min-height:40px}
   width:100%;transition:width .2s linear}
 .restactions{display:flex;gap:10px;margin-top:4px}
 
-/* Modales */
+/* Modales generales (Configuración) */
 .modal{position:fixed;inset:0;z-index:100;background:rgba(5,8,12,.72);
   display:none;align-items:flex-end;justify-content:center;backdrop-filter:blur(3px)}
 .modal.open{display:flex}
@@ -171,68 +169,75 @@ textarea.inp{font-family:inherit;resize:vertical;min-height:40px}
 .imc-tag.danger{background:rgba(255,93,93,.12);color:var(--danger)}
 
 /* ---------------------------------------------------
-   VISTA DE ENFOQUE (FOCUS VIEW MODAL)
+   VISTA DE ENFOQUE (CENTRADA)
 --------------------------------------------------- */
 .focus-modal{
   position:fixed; inset:0; z-index:200; background:rgba(5,8,12,.85);
-  display:none; align-items:flex-end; justify-content:center;
+  display:none; align-items:center; justify-content:center; /* CENTRADO */
   backdrop-filter:blur(8px);
 }
 .focus-modal.open{ display:flex; }
 .focus-sheet{
-  width:100%; max-width:560px;
+  width:90%; max-width:400px;
   background:var(--card); border:1px solid var(--line);
-  border-radius:24px 24px 0 0;
-  padding:24px 20px calc(24px + env(safe-area-inset-bottom));
-  animation:up .25s cubic-bezier(0.175, 0.885, 0.32, 1.1);
-  box-shadow: 0 -20px 40px rgba(0,0,0,0.8);
+  border-radius:24px; /* Ya no está pegado al borde inferior */
+  padding:24px 20px;
+  animation:zoomIn .25s cubic-bezier(0.175, 0.885, 0.32, 1.1);
+  box-shadow: 0 20px 50px rgba(0,0,0,0.9);
 }
-.focus-header{ text-align:center; margin-bottom:20px; }
-.focus-title{ font-size:22px; font-weight:800; letter-spacing:-.02em; margin-bottom:4px;}
+@keyframes zoomIn { from{ transform:scale(.9); opacity:0; } to{ transform:scale(1); opacity:1; } }
+
+.focus-header{ text-align:center; margin-bottom:16px; }
+.focus-title{ font-size:22px; font-weight:800; letter-spacing:-.02em; margin-bottom:4px; line-height:1.1;}
 .focus-sub{ color:var(--muted); font-size:13px; font-weight:600;}
+.focus-meta{ font-size:12px; color:var(--acc2); font-weight:700; margin-top:6px; display:flex; justify-content:center; gap:8px;}
+.focus-meta span{ background:rgba(77,214,240,.1); padding:3px 8px; border-radius:6px; border:1px solid rgba(77,214,240,.2);}
+
 .focus-timer-container{
-  position:relative; width:200px; height:200px; margin:0 auto 24px;
+  position:relative; width:180px; height:180px; margin:0 auto 24px;
   display:flex; align-items:center; justify-content:center;
 }
 .focus-timer-text{
-  font-size:48px; font-weight:800; font-variant-numeric:tabular-nums;
+  font-size:44px; font-weight:800; font-variant-numeric:tabular-nums;
   color:var(--acc); text-shadow:0 0 20px rgba(139,241,74,.4); z-index:10;
 }
+.focus-timer-text.resting { color:var(--acc2); text-shadow:0 0 20px rgba(77,214,240,.4); }
 .focus-timer-label{
-  position:absolute; bottom:30px; font-size:11px; text-transform:uppercase;
+  position:absolute; bottom:26px; font-size:10px; text-transform:uppercase;
   letter-spacing:.1em; color:var(--muted); z-index:10;
 }
 .focus-circle{ position:absolute; top:0; left:0; width:100%; height:100%; transform:rotate(-90deg);}
 .focus-circle circle{ fill:none; stroke-width:8; stroke-linecap:round; }
 .focus-circle .bg{ stroke:#1f2833; }
-.focus-circle .fg{ stroke:var(--acc); transition:stroke-dashoffset 1s linear;}
+.focus-circle .fg{ stroke:var(--acc); transition:stroke-dashoffset .2s linear;}
 
 .focus-controls{ display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:24px;}
 .focus-control-box{
   background:#11161e; border:1px solid var(--line); border-radius:16px;
-  padding:12px; display:flex; align-items:center; justify-content:space-between;
+  padding:10px; display:flex; align-items:center; justify-content:space-between;
 }
 .focus-btn-step{
-  width:44px; height:44px; border-radius:50%; background:#1d2531;
-  border:none; color:var(--txt); font-size:24px; font-weight:800;
+  width:40px; height:40px; border-radius:50%; background:#1d2531;
+  border:none; color:var(--txt); font-size:20px; font-weight:800;
   cursor:pointer; display:flex; align-items:center; justify-content:center;
 }
 .focus-btn-step:active{ background:var(--acc); color:#000; }
-.focus-val{ font-size:28px; font-weight:800; text-align:center; flex:1; font-variant-numeric:tabular-nums;}
-.focus-val-lbl{ font-size:11px; color:var(--muted); text-align:center; text-transform:uppercase; font-weight:700; margin-top:-4px;}
+.focus-val{ font-size:26px; font-weight:800; text-align:center; flex:1; font-variant-numeric:tabular-nums;}
+.focus-val-lbl{ font-size:10px; color:var(--muted); text-align:center; text-transform:uppercase; font-weight:700; margin-top:-2px;}
 .focus-btn-check{
-  width:100%; padding:20px; border-radius:16px; background:var(--acc);
-  color:#000; font-size:18px; font-weight:800; border:none; cursor:pointer;
+  width:100%; padding:18px; border-radius:16px; background:var(--acc);
+  color:#000; font-size:16px; font-weight:800; border:none; cursor:pointer;
   display:flex; align-items:center; justify-content:center; gap:8px;
 }
 .focus-btn-check:active{ transform:scale(.98); }
+.focus-btn-check.close-btn{ background:var(--card2); color:var(--txt); border:1px solid var(--line); }
 </style>
 </head>
 <body>
 
 <header class="topbar">
  <button id="installBtn" style="display:none; background:var(--acc2); color:#000; border:none; padding:6px 10px; border-radius:8px; font-weight:bold; font-size:12px; margin-right:10px;">Instalar App</button>
-  <div class="brand">GYM<b>LOG</b> <span>v2.1</span></div>
+  <div class="brand">GYM<b>LOG</b> <span>v2.2</span></div>
   <nav>
     <button data-nav="home">Inicio</button>
     <button data-nav="profile">Perfil</button>
@@ -335,7 +340,7 @@ const state = {
   session:   DB.get("ft_session", null),
   timer:     DB.get("ft_timer", { running:false, elapsed:0, startedAt:null }),
   rest:      { endsAt: null, total: 0 },
-  focus:     { exIdx: null, setIdx: null } // Estado para la Vista de Enfoque
+  focus:     { exIdx: null, setIdx: null }
 };
 
 const persist = {
@@ -628,7 +633,11 @@ function renderHistory(){
 
 function renderRestDock(){
   const dock = $("#restDock");
-  if (state.screen !== "workout" || !state.session){ dock.classList.add("hidden"); return; }
+  // Ocultar el dock si estamos en modo Focus
+  if (state.screen !== "workout" || !state.session || $("#focusModal").classList.contains("open")){ 
+    dock.classList.add("hidden"); 
+    return; 
+  }
   dock.classList.remove("hidden");
 
   if (state.rest.endsAt){
@@ -667,7 +676,7 @@ function tick(){
     const num = $("#restNum"), bar = $("#restBar");
     if (left <= 0){
       state.rest.endsAt = null; state.rest.total = 0;
-      beep(); renderRestDock();
+      beep(); renderRestDock(); updateFocusClockUI(); // Actualizamos focus al terminar
     } else {
       if (num) num.textContent = fmtSecs(Math.ceil(left / 1000));
       if (bar) bar.style.width = (state.rest.total ? left / state.rest.total * 100 : 0) + "%";
@@ -684,25 +693,28 @@ function openFocus(exIdx, setIdx) {
   const ex = state.session.exercises[exIdx];
   const st = ex.sets[setIdx];
 
+  // Evaluamos si es la última serie del ejercicio
+  const isLastSet = setIdx >= ex.sets.length - 1;
+
   const modal = $("#focusModal");
   modal.innerHTML = `
     <div class="focus-sheet">
       <div class="focus-header">
         <div class="focus-title">${esc(ex.name)}</div>
         <div class="focus-sub">Serie ${setIdx + 1} de ${ex.sets.length} · Objetivo: ${esc(ex.reps)} reps</div>
+        <div class="focus-meta">
+          ${ex.tempo ? `<span>Tempo: ${ex.tempo}</span>` : ""}
+          ${ex.rir ? `<span>RIR: ${ex.rir}</span>` : ""}
+        </div>
       </div>
 
-      <!-- Reloj circular (simula el tiempo de descanso si se activa, o estático si no) -->
       <div class="focus-timer-container">
         <svg class="focus-circle" viewBox="0 0 100 100">
           <circle class="bg" cx="50" cy="50" r="45"></circle>
-          <!-- Si el descanso está activo, muestra el aro. Si no, aro vacío -->
-          <circle class="fg" cx="50" cy="50" r="45" 
-                  stroke-dasharray="283" 
-                  stroke-dashoffset="${state.rest.endsAt ? 0 : 283}"></circle>
+          <circle class="fg" id="focusRing" cx="50" cy="50" r="45" stroke-dasharray="283" stroke-dashoffset="283"></circle>
         </svg>
         <div class="focus-timer-text" id="focusClock">00:00</div>
-        <div class="focus-timer-label" id="focusClockLbl">Esperando</div>
+        <div class="focus-timer-label" id="focusClockLbl">Listo para la serie</div>
       </div>
 
       <div class="focus-controls">
@@ -725,10 +737,9 @@ function openFocus(exIdx, setIdx) {
         </div>
       </div>
 
-      <button class="focus-btn-check" data-act="focusComplete" data-ex="${exIdx}" data-set="${setIdx}">
-        ✓ Completar Serie
+      <button class="focus-btn-check ${isLastSet ? 'close-btn' : ''}" data-act="${isLastSet ? 'focusCloseDone' : 'focusComplete'}" data-ex="${exIdx}" data-set="${setIdx}">
+        ${isLastSet ? '✓ Cerrar y Finalizar' : '✓ Completar Serie'}
       </button>
-      <button class="btn ghost big mt8" data-act="closeFocus">Cerrar</button>
     </div>
   `;
   modal.classList.add("open");
@@ -739,6 +750,7 @@ function closeFocus() {
   $("#focusModal").classList.remove("open");
   $("#focusModal").innerHTML = "";
   state.focus = { exIdx: null, setIdx: null };
+  render(); // Refrescar dock y lista al cerrar
 }
 
 function focusStep(field, dir) {
@@ -746,43 +758,44 @@ function focusStep(field, dir) {
   const st = ex.sets[state.focus.setIdx];
   let val = parseFloat(st[field]) || 0;
   
-  // Incremento de 2.5kg para peso, 1 para reps
   const step = field === "weight" ? 2.5 : 1;
   val += (step * dir);
   if (val < 0) val = 0;
   
-  // Formatear para quitar el ".0" si es entero
   st[field] = val % 1 === 0 ? val.toString() : val.toFixed(1);
   persist.session();
   
-  // Actualizar UI del modal
   if (field === "weight") $("#focusWeight").textContent = st[field];
   if (field === "reps") $("#focusReps").textContent = st[field];
 }
 
 function updateFocusClockUI() {
-  if (!state.focus.exIdx && state.focus.exIdx !== 0) return;
   const clock = $("#focusClock");
   if (!clock) return;
 
   if (state.rest.endsAt) {
     const left = Math.max(0, state.rest.endsAt - Date.now());
     clock.textContent = fmtSecs(Math.ceil(left / 1000));
-    $("#focusClockLbl").textContent = "Descansando";
-    const circle = document.querySelector(".focus-circle .fg");
+    clock.classList.add("resting");
+    $("#focusClockLbl").textContent = "Descansando...";
+    
+    // Actualizar aro
+    const circle = $("#focusRing");
     if (circle) {
       const pct = left / state.rest.total;
       circle.setAttribute("stroke-dashoffset", 283 - (283 * pct));
     }
   } else {
     clock.textContent = "00:00";
-    $("#focusClockLbl").textContent = "Listo";
-    const circle = document.querySelector(".focus-circle .fg");
-    if (circle) circle.setAttribute("stroke-dashoffset", 283);
+    clock.classList.remove("resting");
+    $("#focusClockLbl").textContent = "Listo para la serie";
+    
+    const circle = $("#focusRing");
+    if (circle) circle.setAttribute("stroke-dashoffset", 283); // Aro vacío
   }
 }
 
-// Extender el ticker global para actualizar el reloj del Focus Modal
+// Hook para actualizar el reloj del Focus cuando corre el tick
 const originalTick = tick;
 window.tick = function() {
   originalTick();
@@ -1000,14 +1013,40 @@ document.addEventListener("click", e => {
   if (act === "openFocus") return openFocus(+btn.dataset.ex, +btn.dataset.set);
   if (act === "closeFocus") return closeFocus();
   if (act === "focusStep") return focusStep(btn.dataset.f, parseInt(btn.dataset.dir));
+  
   if (act === "focusComplete") {
-    const ex = state.session.exercises[+btn.dataset.ex];
-    const st = ex.sets[+btn.dataset.set];
-    st.done = true;
+    const exIdx = +btn.dataset.ex;
+    const setIdx = +btn.dataset.set;
+    const ex = state.session.exercises[exIdx];
+    
+    ex.sets[setIdx].done = true;
     persist.session();
-    closeFocus();
+    
+    // Iniciar descanso
     restStart(ex.rest);
-    render();
+    
+    // Pasar a la siguiente serie
+    if (setIdx + 1 < ex.sets.length) {
+      // Copiar peso de la serie anterior para no volver a escribirlo
+      const prevWeight = ex.sets[setIdx].weight;
+      if (!ex.sets[setIdx + 1].weight) {
+        ex.sets[setIdx + 1].weight = prevWeight;
+        persist.session();
+      }
+      openFocus(exIdx, setIdx + 1);
+    } else {
+      closeFocus();
+    }
+    return;
+  }
+
+  if (act === "focusCloseDone") {
+    const exIdx = +btn.dataset.ex;
+    const setIdx = +btn.dataset.set;
+    state.session.exercises[exIdx].sets[setIdx].done = true;
+    persist.session();
+    restStart(state.session.exercises[exIdx].rest);
+    closeFocus();
     return;
   }
 
