@@ -77,8 +77,9 @@ main{padding:16px;max-width:720px;margin:0 auto}
 .btn.xs{padding:6px 10px;font-size:12px;border-radius:9px}
 .btn.rest{background:rgba(77,214,240,.1);border-color:rgba(77,214,240,.35);color:var(--acc2);
   padding:8px 12px;font-size:12.5px;border-radius:10px;font-weight:700;white-space:nowrap}
+.btn.focus-btn{background:rgba(139,241,74,.1);border:1px solid rgba(139,241,74,.3);color:var(--acc);padding:6px 10px;border-radius:8px;font-weight:700;font-size:16px;cursor:pointer;}
 
-/* Rediseño de cabecera para dar protagonismo al reloj */
+/* Cabecera de sesión */
 .sticky-head{
   position:sticky;top:57px;z-index:30;
   background:rgba(13,17,23,.96);backdrop-filter:blur(14px);
@@ -97,7 +98,7 @@ main{padding:16px;max-width:720px;margin:0 auto}
 
 .exname{font-size:15.5px;font-weight:750;letter-spacing:-.01em}
 .sets{margin-top:11px;display:flex;flex-direction:column;gap:6px}
-.set{display:grid;grid-template-columns:26px 1fr 1fr 42px;gap:6px;align-items:center;
+.set{display:grid;grid-template-columns:26px 1fr 1fr 35px 42px;gap:6px;align-items:center;
   background:#11161e;border:1px solid #1f2833;border-radius:10px;padding:6px 7px;transition:.15s}
 .set.done{background:rgba(139,241,74,.07);border-color:rgba(139,241,74,.32)}
 .setn{color:var(--muted);font-size:12px;font-weight:700;text-align:center}
@@ -110,7 +111,7 @@ textarea.inp{font-family:inherit;resize:vertical;min-height:40px}
   color:#4c5a6b;font-size:16px;font-weight:800;cursor:pointer}
 .check.on{background:var(--acc);border-color:var(--acc);color:#0b1206}
 
-/* Rediseño del dock de descanso para que sea gigante */
+/* Dock de descanso */
 .restdock{
   position:fixed;left:0;right:0;bottom:0;z-index:50;
   padding:12px 14px calc(12px + env(safe-area-inset-bottom));
@@ -131,6 +132,7 @@ textarea.inp{font-family:inherit;resize:vertical;min-height:40px}
   width:100%;transition:width .2s linear}
 .restactions{display:flex;gap:10px;margin-top:4px}
 
+/* Modales */
 .modal{position:fixed;inset:0;z-index:100;background:rgba(5,8,12,.72);
   display:none;align-items:flex-end;justify-content:center;backdrop-filter:blur(3px)}
 .modal.open{display:flex}
@@ -150,7 +152,6 @@ textarea.inp{font-family:inherit;resize:vertical;min-height:40px}
   border-radius:11px;padding:12px 13px;font-size:15px;outline:none;
 }
 .field input:focus,.field select:focus{border-color:var(--acc2)}
-/* Editor de plantillas: 2 filas para que entren todos los datos */
 .tpl-row{background:#11161e;border:1px solid var(--line);border-radius:10px;padding:10px;margin-bottom:8px;display:flex;flex-direction:column;gap:8px}
 .tpl-row-top{display:grid;grid-template-columns:1fr 32px;gap:6px}
 .tpl-row-bot{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:6px}
@@ -162,27 +163,76 @@ textarea.inp{font-family:inherit;resize:vertical;min-height:40px}
 .hist .right{text-align:right}
 .hist .right .mono{font-size:15px;font-weight:750;color:var(--acc)}
 
-/* perfil */
-.imc-box{
-  display:flex;align-items:center;gap:16px;
-  background:#0f141c;border:1px solid var(--line);border-radius:12px;padding:14px 16px;
-}
+.imc-box{display:flex;align-items:center;gap:16px;background:#0f141c;border:1px solid var(--line);border-radius:12px;padding:14px 16px;}
 .imc-num{font-size:34px;font-weight:800;line-height:1;letter-spacing:-.02em}
-.imc-tag{
-  font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;
-  padding:5px 10px;border-radius:99px;background:#1a2330;color:var(--muted);
-  transition:.2s;
-}
+.imc-tag{font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:5px 10px;border-radius:99px;background:#1a2330;color:var(--muted);transition:.2s;}
 .imc-tag.pos{background:rgba(139,241,74,.12);color:var(--acc)}
 .imc-tag.warn{background:rgba(255,176,32,.12);color:var(--warn)}
 .imc-tag.danger{background:rgba(255,93,93,.12);color:var(--danger)}
+
+/* ---------------------------------------------------
+   VISTA DE ENFOQUE (FOCUS VIEW MODAL)
+--------------------------------------------------- */
+.focus-modal{
+  position:fixed; inset:0; z-index:200; background:rgba(5,8,12,.85);
+  display:none; align-items:flex-end; justify-content:center;
+  backdrop-filter:blur(8px);
+}
+.focus-modal.open{ display:flex; }
+.focus-sheet{
+  width:100%; max-width:560px;
+  background:var(--card); border:1px solid var(--line);
+  border-radius:24px 24px 0 0;
+  padding:24px 20px calc(24px + env(safe-area-inset-bottom));
+  animation:up .25s cubic-bezier(0.175, 0.885, 0.32, 1.1);
+  box-shadow: 0 -20px 40px rgba(0,0,0,0.8);
+}
+.focus-header{ text-align:center; margin-bottom:20px; }
+.focus-title{ font-size:22px; font-weight:800; letter-spacing:-.02em; margin-bottom:4px;}
+.focus-sub{ color:var(--muted); font-size:13px; font-weight:600;}
+.focus-timer-container{
+  position:relative; width:200px; height:200px; margin:0 auto 24px;
+  display:flex; align-items:center; justify-content:center;
+}
+.focus-timer-text{
+  font-size:48px; font-weight:800; font-variant-numeric:tabular-nums;
+  color:var(--acc); text-shadow:0 0 20px rgba(139,241,74,.4); z-index:10;
+}
+.focus-timer-label{
+  position:absolute; bottom:30px; font-size:11px; text-transform:uppercase;
+  letter-spacing:.1em; color:var(--muted); z-index:10;
+}
+.focus-circle{ position:absolute; top:0; left:0; width:100%; height:100%; transform:rotate(-90deg);}
+.focus-circle circle{ fill:none; stroke-width:8; stroke-linecap:round; }
+.focus-circle .bg{ stroke:#1f2833; }
+.focus-circle .fg{ stroke:var(--acc); transition:stroke-dashoffset 1s linear;}
+
+.focus-controls{ display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:24px;}
+.focus-control-box{
+  background:#11161e; border:1px solid var(--line); border-radius:16px;
+  padding:12px; display:flex; align-items:center; justify-content:space-between;
+}
+.focus-btn-step{
+  width:44px; height:44px; border-radius:50%; background:#1d2531;
+  border:none; color:var(--txt); font-size:24px; font-weight:800;
+  cursor:pointer; display:flex; align-items:center; justify-content:center;
+}
+.focus-btn-step:active{ background:var(--acc); color:#000; }
+.focus-val{ font-size:28px; font-weight:800; text-align:center; flex:1; font-variant-numeric:tabular-nums;}
+.focus-val-lbl{ font-size:11px; color:var(--muted); text-align:center; text-transform:uppercase; font-weight:700; margin-top:-4px;}
+.focus-btn-check{
+  width:100%; padding:20px; border-radius:16px; background:var(--acc);
+  color:#000; font-size:18px; font-weight:800; border:none; cursor:pointer;
+  display:flex; align-items:center; justify-content:center; gap:8px;
+}
+.focus-btn-check:active{ transform:scale(.98); }
 </style>
 </head>
 <body>
 
 <header class="topbar">
  <button id="installBtn" style="display:none; background:var(--acc2); color:#000; border:none; padding:6px 10px; border-radius:8px; font-weight:bold; font-size:12px; margin-right:10px;">Instalar App</button>
-  <div class="brand">GYM<b>LOG</b> <span>v2.0</span></div>
+  <div class="brand">GYM<b>LOG</b> <span>v2.1</span></div>
   <nav>
     <button data-nav="home">Inicio</button>
     <button data-nav="profile">Perfil</button>
@@ -193,6 +243,7 @@ textarea.inp{font-family:inherit;resize:vertical;min-height:40px}
 <main id="view"></main>
 <div id="restDock" class="restdock hidden"></div>
 <div id="modal" class="modal"></div>
+<div id="focusModal" class="focus-modal"></div>
 
 <script>
 "use strict";
@@ -283,7 +334,8 @@ const state = {
   history:   DB.get("ft_history", []),
   session:   DB.get("ft_session", null),
   timer:     DB.get("ft_timer", { running:false, elapsed:0, startedAt:null }),
-  rest:      { endsAt: null, total: 0 }
+  rest:      { endsAt: null, total: 0 },
+  focus:     { exIdx: null, setIdx: null } // Estado para la Vista de Enfoque
 };
 
 const persist = {
@@ -349,7 +401,7 @@ function restAdd(ms){
 function restStop(){ state.rest.endsAt = null; state.rest.total = 0; renderRestDock(); }
 
 /* ============================================================
-   NAVEGACIÓN
+   NAVEGACIÓN Y RENDER
    ============================================================ */
 function go(screen){ state.screen = screen; render(); window.scrollTo({ top:0, behavior:"smooth" }); }
 
@@ -367,7 +419,6 @@ function render(){
   updateClockUI();
 }
 
-/* ---------- HOME ---------- */
 function renderHome(){
   const enCurso = state.session;
   return `
@@ -413,7 +464,6 @@ function renderHome(){
   `;
 }
 
-/* ---------- PERFIL ---------- */
 function renderProfile(){
   const p = state.profile;
   const imcVal = calcIMC(p.weight, p.height);
@@ -435,739 +485,4 @@ function renderProfile(){
         <input type="number" step="1" min="100" max="250" id="pHeight"
                value="${esc(p.height ?? "")}" placeholder="Ej: 178">
       </div>
-      <div class="field" style="margin-bottom:0">
-        <label>Edad</label>
-        <input type="number" step="1" min="10" max="120" id="pAge"
-               value="${esc(p.age ?? "")}" placeholder="Ej: 32">
-      </div>
-    </div>
-
-    <div class="section-title">Índice de Masa Corporal</div>
-    <div class="card">
-      <div class="imc-box">
-        <div class="imc-num mono" id="imcNum" style="color:${imcVal ? "var(--txt)" : "var(--muted)"}">
-          ${imcVal ? imcVal.toFixed(1) : "—"}
-        </div>
-        <div style="flex:1">
-          <div class="lbl" style="margin-bottom:6px">Clasificación</div>
-          <span class="imc-tag ${info.cls}" id="imcTag">${info.label}</span>
-        </div>
-      </div>
-      <div class="lbl mt12" style="line-height:1.5">
-        IMC = peso ÷ altura² · Referencia OMS.
-        No distingue masa muscular de grasa; úsalo como orientación general.
-      </div>
-    </div>
-
-    <button class="btn acc big" data-act="saveProfile" id="saveProfileBtn">Guardar perfil</button>
-  `;
-}
-
-/* ---------- WORKOUT ---------- */
-function renderWorkout(){
-  const s = state.session;
-  const totalSets = s.exercises.reduce((a,e) => a + e.sets.length, 0);
-  const doneSets  = s.exercises.reduce((a,e) => a + e.sets.filter(x => x.done).length, 0);
-  const pct = totalSets ? Math.round(doneSets / totalSets * 100) : 0;
-  const running = state.timer.running;
-
-  return `
-  <div class="sticky-head">
-    <div class="head-top">
-      <div>
-        <div class="lbl">Sesión</div>
-        <div class="title-sm">${esc(s.templateName)}</div>
-        <div class="lbl">${fmtDate(s.startedAt)} · ${fmtTime(s.startedAt)}</div>
-      </div>
-      <div class="row gap6">
-        <button class="btn ghost sm" data-act="timerToggle">${running ? "Pausar" : "Iniciar"}</button>
-        <button class="btn ghost sm" data-act="timerReset">Reset</button>
-      </div>
-    </div>
-    
-    <!-- Reloj principal con protagonismo -->
-    <div class="timer ${running ? "" : "paused"}" id="clock">${fmtClock(timerElapsed())}</div>
-    
-    <div class="progress"><i style="width:${pct}%"></i></div>
-    <div class="lbl mt8" style="text-align:right">${doneSets}/${totalSets} series · ${pct}%</div>
-  </div>
-
-  ${s.exercises.map((ex, i) => renderExercise(ex, i)).join("")}
-
-  <button class="btn ghost big mt8" data-act="addExercise">+ Agregar ejercicio</button>
-
-  <div class="row gap8 mt12">
-    <button class="btn acc" style="flex:1" data-act="finish">Terminar y guardar</button>
-    <button class="btn danger" data-act="discard">Descartar</button>
-  </div>
-  <div style="height:20px"></div>`;
-}
-
-function renderExercise(ex, i){
-  // Info extra (Tempo y RIR) si existen
-  let extras = [];
-  if (ex.tempo && ex.tempo !== "-") extras.push(`Tempo: ${esc(ex.tempo)}`);
-  if (ex.rir && ex.rir !== "-") extras.push(`RIR: ${esc(ex.rir)}`);
-  const extrasTxt = extras.length ? ` · ${extras.join(" · ")}` : "";
-
-  return `
-  <div class="card">
-    <div class="row between">
-      <div>
-        <div class="exname">${esc(ex.name)}</div>
-        <div class="lbl">${ex.sets.length} × ${esc(ex.reps)}${extrasTxt} · desc. ${fmtShort(ex.rest)}</div>
-      </div>
-      <button class="btn rest" data-act="restGo" data-secs="${ex.rest}">⏱ ${fmtShort(ex.rest)}</button>
-    </div>
-    <div class="sets">
-      ${ex.sets.map((st, j) => `
-        <div class="set ${st.done ? "done" : ""}">
-          <span class="setn">${j+1}</span>
-          <input class="inp" type="number" inputmode="decimal" step="0.5" min="0"
-                 placeholder="kg" value="${st.weight ?? ""}"
-                 data-ex="${i}" data-set="${j}" data-f="weight">
-          <input class="inp" type="text" inputmode="text"
-                 placeholder="${esc(ex.reps)}" value="${st.reps ?? ""}"
-                 data-ex="${i}" data-set="${j}" data-f="reps">
-          <button class="check ${st.done ? "on" : ""}" data-act="toggleSet" data-ex="${i}" data-set="${j}">✓</button>
-        </div>`).join("")}
-    </div>
-    <div class="row gap6 mt8">
-      <button class="btn ghost xs" data-act="addSet" data-ex="${i}">+ Serie</button>
-      <button class="btn ghost xs" data-act="delSet" data-ex="${i}">− Serie</button>
-    </div>
-    <!-- Campo de Notas por ejercicio -->
-    <div class="mt8">
-      <textarea class="inp notes" rows="1" placeholder="Notas (sensaciones, molestias, etc.)"
-                data-ex="${i}" data-f="notes">${esc(ex.notes || "")}</textarea>
-    </div>
-  </div>`;
-}
-
-/* ---------- HISTORIAL ---------- */
-function renderHistory(){
-  if (!state.history.length)
-    return `<div class="empty">Todavía no guardaste ninguna sesión.<br>Cuando termines una, aparece acá.</div>`;
-
-  return `<div class="section-title">Historial</div>` +
-    state.history.slice().reverse().map(h => `
-      <div class="card hist">
-        <div class="row between">
-          <div>
-            <div class="exname">${esc(h.templateName)}</div>
-            <div class="lbl">${fmtDate(h.date)} · ${fmtTime(h.date)}</div>
-          </div>
-          <div class="right">
-            <div class="mono">${fmtClock(h.durationMs)}</div>
-            <div class="lbl">${h.doneSets}/${h.totalSets} series</div>
-          </div>
-        </div>
-        <div class="lbl mt8">Volumen total: ${h.volume.toLocaleString("es-AR")} kg</div>
-      </div>`).join("") +
-    `<div class="card" style="border-color:var(--acc)">
-      <div class="exname" style="color:var(--acc)">Exportar para Asistente IA</div>
-      <div class="lbl mt8" style="line-height:1.4">
-        Genera un resumen de tu progreso en texto. Ideal para pegar en DeepSeek o ChatGPT y pedir ajustes de rutina.
-      </div>
-      <div class="row gap6 mt12">
-        <select id="aiRange" class="inp" style="flex:1; padding:10px">
-          <option value="3">Últimas 3 sesiones</option>
-          <option value="5" selected>Últimas 5 sesiones</option>
-          <option value="10">Últimas 10 sesiones</option>
-          <option value="all">Todo el historial</option>
-        </select>
-        <button class="btn acc" data-act="copyForAI">Copiar reporte</button>
-      </div>
-    </div>
-    <button class="btn danger big mt12" data-act="clearHistory">Borrar historial</button>`;
-}
-
-/* ---------- REST DOCK (Protagonismo) ---------- */
-function renderRestDock(){
-  const dock = $("#restDock");
-  if (state.screen !== "workout" || !state.session){ dock.classList.add("hidden"); return; }
-  dock.classList.remove("hidden");
-
-  if (state.rest.endsAt){
-    const left = Math.max(0, state.rest.endsAt - Date.now());
-    dock.innerHTML = `
-      <div class="restcount">
-        <div class="lbl" style="color:var(--acc2)">Tiempo de Descanso</div>
-        <div class="restnum" id="restNum">${fmtSecs(Math.ceil(left / 1000))}</div>
-        <div class="restbar"><i id="restBar" style="width:${state.rest.total ? (left / state.rest.total * 100) : 0}%"></i></div>
-        <div class="restactions">
-          <button class="btn ghost sm" data-act="restAdd">+15s</button>
-          <button class="btn danger sm" data-act="restStop">Detener</button>
-        </div>
-      </div>`;
-  } else {
-    dock.innerHTML = `
-      <div class="restpresets">
-        <span class="lbl" style="margin-right:4px">Descanso manual</span>
-        ${[45, 60, 90, 120, 180].map(s =>
-          `<button class="chip" data-act="restGo" data-secs="${s}">${fmtShort(s)}</button>`).join("")}
-      </div>`;
-  }
-}
-
-/* ---------- TICK ---------- */
-function updateClockUI(){
-  const el = $("#clock");
-  if (el){
-    el.textContent = fmtClock(timerElapsed());
-    el.classList.toggle("paused", !state.timer.running);
-  }
-}
-function tick(){
-  updateClockUI();
-  if (state.rest.endsAt){
-    const left = state.rest.endsAt - Date.now();
-    const num = $("#restNum"), bar = $("#restBar");
-    if (left <= 0){
-      state.rest.endsAt = null; state.rest.total = 0;
-      beep(); renderRestDock();
-    } else {
-      if (num) num.textContent = fmtSecs(Math.ceil(left / 1000));
-      if (bar) bar.style.width = (state.rest.total ? left / state.rest.total * 100 : 0) + "%";
-    }
-  }
-}
-setInterval(tick, 200);
-
-/* ============================================================
-   MODALES
-   ============================================================ */
-function openModal(html){
-  const m = $("#modal");
-  m.innerHTML = `<div class="sheet">${html}</div>`;
-  m.classList.add("open");
-}
-function closeModal(){ const m = $("#modal"); m.classList.remove("open"); m.innerHTML = ""; }
-
-function modalNewSession(preId){
-  const now = new Date();
-  const iso = `${now.getFullYear()}-${pad(now.getMonth()+1)}-${pad(now.getDate())}`;
-  const hm  = `${pad(now.getHours())}:${pad(now.getMinutes())}`;
-  openModal(`
-    <h2>Nueva sesión</h2>
-    <div class="field">
-      <label>Plantilla</label>
-      <select id="mTemplate">
-        <option value="">— Sesión vacía —</option>
-        ${state.templates.map(t => `<option value="${t.id}" ${t.id === preId ? "selected" : ""}>${esc(t.name)}</option>`).join("")}
-      </select>
-    </div>
-    <div class="field"><label>Fecha</label><input type="date" id="mDate" value="${iso}"></div>
-    <div class="field"><label>Hora de inicio</label><input type="time" id="mTime" value="${hm}"></div>
-    <button class="btn acc big" data-act="startSession">Comenzar entrenamiento</button>
-    <button class="btn ghost big mt8" data-act="closeModal">Cancelar</button>
-  `);
-}
-
-function modalExercise(exIdx){
-  const isEdit = exIdx !== undefined && exIdx !== null;
-  const ex = isEdit ? state.session.exercises[exIdx] : { name:"", reps:"8-12", rest:90, tempo:"", rir:"", notes:"" };
-  openModal(`
-    <h2>${isEdit ? "Editar ejercicio" : "Agregar ejercicio"}</h2>
-    <div class="field"><label>Nombre</label><input id="eName" value="${esc(ex.name)}" placeholder="Ej: Press banca"></div>
-    
-    <div class="row gap8">
-      <div class="field" style="flex:1"><label>Series</label><input id="eSets" type="text" value="${ex.sets && ex.sets.length ? ex.sets.length : 3}" placeholder="Ej: 3 o 2-3"></div>
-      <div class="field" style="flex:1"><label>Reps objetivo</label><input id="eReps" value="${esc(ex.reps)}" placeholder="Ej: 8-12"></div>
-      <div class="field" style="flex:1"><label>Desc. (seg)</label><input id="eRest" type="number" min="10" max="600" step="5" value="${ex.rest}"></div>
-    </div>
-    
-    <div class="row gap8">
-      <div class="field" style="flex:1"><label>Tempo</label><input id="eTempo" value="${esc(ex.tempo || "")}" placeholder="Ej: 3-1-2"></div>
-      <div class="field" style="flex:1"><label>RIR</label><input id="eRIR" value="${esc(ex.rir || "")}" placeholder="Ej: 1-2"></div>
-    </div>
-
-    <button class="btn acc big mt8" data-act="saveExercise" data-idx="${isEdit ? exIdx : ""}">${isEdit ? "Guardar" : "Agregar"}</button>
-    <button class="btn ghost big mt8" data-act="closeModal">Cancelar</button>
-  `);
-}
-
-function modalTemplate(tplId){
-  const isNew = !tplId;
-  const tpl = isNew
-    ? { id: uid(), name:"", exercises:[] }
-    : JSON.parse(JSON.stringify(state.templates.find(t => t.id === tplId)));
-
-  openModal(`
-    <h2>${isNew ? "Nueva plantilla" : "Editar plantilla"}</h2>
-    <div class="field"><label>Nombre</label><input id="tName" value="${esc(tpl.name)}" placeholder="Ej: Torso A"></div>
-    <label class="lbl" style="display:block;margin:16px 0 8px">Ejercicios</label>
-    <div id="tplList">
-      ${tpl.exercises.map((e, i) => `
-        <div class="tpl-row" data-row="${i}">
-          <div class="tpl-row-top">
-            <input class="inp" data-f="name" placeholder="Ejercicio" value="${esc(e.name)}">
-            <button class="del" data-act="tplDelRow" data-i="${i}">×</button>
-          </div>
-          <div class="tpl-row-bot">
-            <input class="inp" data-f="sets" type="text" placeholder="Series (ej 3)" value="${esc(e.sets)}">
-            <input class="inp" data-f="reps" placeholder="Reps" value="${esc(e.reps)}">
-            <input class="inp" data-f="tempo" placeholder="Tempo" value="${esc(e.tempo || "")}">
-            <input class="inp" data-f="rir" placeholder="RIR" value="${esc(e.rir || "")}">
-          </div>
-          <div class="tpl-row-bot">
-            <input class="inp" data-f="rest" type="number" min="10" step="5" placeholder="Descanso (seg)" value="${e.rest}" style="grid-column: span 4;">
-          </div>
-        </div>`).join("")}
-    </div>
-    <button class="btn ghost sm mt8" data-act="tplAddRow">+ Agregar fila</button>
-    <div style="height:14px"></div>
-    <button class="btn acc big" data-act="saveTemplate" data-id="${tpl.id}" data-new="${isNew ? 1 : 0}">Guardar plantilla</button>
-    ${isNew ? "" : `<button class="btn danger big mt8" data-act="deleteTemplate" data-id="${tpl.id}">Eliminar plantilla</button>`}
-    <button class="btn ghost big mt8" data-act="closeModal">Cancelar</button>
-  `);
-}
-
-/* ============================================================
-   EXPORTAR / IMPORTAR / REPORTE IA
-   ============================================================ */
-function exportData(){
-  const data = {
-    version: 1,
-    app: "GymLog",
-    exportedAt: new Date().toISOString(),
-    profile: state.profile,
-    templates: state.templates,
-    history: state.history
-  };
-  const blob = new Blob([JSON.stringify(data, null, 2)], { type:"application/json" });
-  const url  = URL.createObjectURL(blob);
-  const a    = document.createElement("a");
-  const stamp = new Date().toISOString().slice(0, 10);
-  a.href = url;
-  a.download = `gymlog-backup-${stamp}.json`;
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
-  URL.revokeObjectURL(url);
-}
-
-function triggerImport(){
-  if (state.session){
-    alert("Terminá o descartá la sesión actual antes de importar.");
-    return;
-  }
-  const input = document.createElement("input");
-  input.type = "file";
-  input.accept = ".json,application/json";
-  input.onchange = e => {
-    const file = e.target.files && e.target.files[0];
-    if (file) importData(file);
-  };
-  input.click();
-}
-
-function importData(file){
-  const reader = new FileReader();
-  reader.onload = e => {
-    try {
-      const data = JSON.parse(e.target.result);
-      if (!data || typeof data !== "object") throw new Error("Archivo inválido");
-      if (!data.templates && !data.history && !data.profile)
-        throw new Error("No parece un respaldo de GymLog");
-
-      const ok = confirm(
-        "Esto REEMPLAZARÁ tu perfil, plantillas e historial actuales.\n\n" +
-        "Recomendación: exportá primero un respaldo por las dudas.\n\n" +
-        "¿Continuar?"
-      );
-      if (!ok) return;
-
-      state.profile   = data.profile   || { weight:"", height:"", age:"" };
-      state.templates = Array.isArray(data.templates) ? data.templates : DEFAULT_TEMPLATES;
-      state.history   = Array.isArray(data.history)   ? data.history   : [];
-
-      persist.profile();
-      persist.templates();
-      persist.history();
-
-      render();
-      alert("Datos importados correctamente.");
-    } catch(err) {
-      alert("Error al importar: " + err.message);
-    }
-  };
-  reader.readAsText(file);
-}
-
-function generateAIText(limit) {
-  const p = state.profile;
-  let hist = state.history.slice().reverse();
-  if (limit !== "all") hist = hist.slice(0, parseInt(limit));
-  
-  const imcVal = calcIMC(p.weight, p.height);
-  const imcStr = imcVal ? imcVal.toFixed(1) : "No calculado";
-
-  let txt = `Actúa como un entrenador personal experto. Analiza mi historial de entrenamiento y ayúdame a ajustar mi rutina.\n\n`;
-  txt += `=== PERFIL DEL ATLETA ===\n`;
-  txt += `- Peso: ${p.weight || "?"} kg\n- Altura: ${p.height || "?"} cm\n- Edad: ${p.age || "?"} años\n`;
-  txt += `- IMC: ${imcStr}\n\n`;
-  txt += `=== HISTORIAL DE SESIONES (últimas ${hist.length}) ===\n\n`;
-
-  hist.forEach(h => {
-    txt += `📅 ${fmtDate(h.date)} (${fmtTime(h.date)}) | Plantilla: ${h.templateName}\n`;
-    txt += `⏱ Duración: ${fmtClock(h.durationMs)} | Volumen: ${h.volume} kg | Series: ${h.doneSets}/${h.totalSets}\n`;
-    
-    h.exercises.forEach(ex => {
-      const done = ex.sets.filter(s => s.done);
-      if (done.length === 0) return;
-      
-      let exTitle = `- ${ex.name} (Objetivo: ${ex.reps}`;
-      if (ex.tempo) exTitle += ` | Tempo: ${ex.tempo}`;
-      if (ex.rir) exTitle += ` | RIR: ${ex.rir}`;
-      exTitle += `):\n`;
-      txt += exTitle;
-
-      done.forEach((s, i) => {
-        txt += `   Serie ${i+1}: ${s.weight || "0"}kg x ${s.reps || "?"} reps\n`;
-      });
-      
-      // Agregar notas al reporte de la IA si existen
-      if (ex.notes && ex.notes.trim() !== "") {
-        txt += `   [Nota del atleta: ${ex.notes.trim()}]\n`;
-      }
-    });
-    txt += `\n----------------------------------------\n\n`;
-  });
-
-  txt += `Por favor, analiza la progresión de mis cargas, detecta si hay estancamiento en algún ejercicio y sugiere qué pesos o repeticiones debería intentar en mi próxima sesión. Ten en cuenta las notas que dejé sobre sensaciones o molestias. Prioriza la claridad.`;
-
-  return txt;
-}
-
-/* ============================================================
-   LÓGICA DE SESIÓN
-   ============================================================ */
-function startSession(templateId, startTs){
-  const tpl = templateId ? state.templates.find(t => t.id === templateId) : null;
-  const exercises = tpl
-    ? tpl.exercises.map(e => {
-        // Manejo de series variables: "2-3" se convierte en 2
-        let numSets = parseInt(e.sets);
-        if (isNaN(numSets)) numSets = 3; 
-        
-        return {
-          name: e.name, reps: e.reps, rest: e.rest, 
-          tempo: e.tempo, rir: e.rir, notes: "",
-          sets: Array.from({ length: numSets }, () => ({ done:false, weight:"", reps:"" }))
-        };
-      })
-    : [];
-
-  state.session = {
-    id: uid(),
-    templateName: tpl ? tpl.name : "Sesión libre",
-    startedAt: startTs,
-    exercises
-  };
-  state.timer = { running:true, elapsed:0, startedAt: Date.now() };
-  persist.session(); persist.timer();
-  closeModal();
-  go("workout");
-}
-
-function finishSession(){
-  const s = state.session;
-  const totalSets = s.exercises.reduce((a,e) => a + e.sets.length, 0);
-  const doneSets  = s.exercises.reduce((a,e) => a + e.sets.filter(x => x.done).length, 0);
-  let volume = 0;
-  s.exercises.forEach(e => e.sets.forEach(st => {
-    if (st.done){
-      const w = parseFloat(st.weight) || 0;
-      const r = parseFloat(st.reps)   || 0;
-      volume += w * r;
-    }
-  }));
-
-  state.history.push({
-    id: s.id,
-    date: s.startedAt,
-    templateName: s.templateName,
-    durationMs: timerElapsed(),
-    totalSets, doneSets,
-    volume: Math.round(volume),
-    exercises: s.exercises
-  });
-  persist.history();
-
-  state.session = null; persist.session();
-  state.timer = { running:false, elapsed:0, startedAt:null }; persist.timer();
-  restStop();
-  go("home");
-}
-
-/* ============================================================
-   EVENTOS
-   ============================================================ */
-document.addEventListener("click", e => {
-  if (e.target.id === "modal") { closeModal(); return; }
-
-  const nav = e.target.closest("[data-nav]");
-  if (nav){ go(nav.dataset.nav); return; }
-
-  const btn = e.target.closest("[data-act]");
-  if (!btn) return;
-  const act = btn.dataset.act;
-
-  /* sesión */
-  if (act === "newSession")   return modalNewSession();
-  if (act === "quickStart")   return startSession(btn.dataset.id, Date.now());
-  if (act === "resumeSession") return go("workout");
-  if (act === "closeModal")   return closeModal();
-
-  if (act === "startSession"){
-    const tplId = $("#mTemplate").value;
-    const d = $("#mDate").value, h = $("#mTime").value;
-    const ts = (d && h) ? new Date(`${d}T${h}`).getTime() : Date.now();
-    return startSession(tplId, ts);
-  }
-
-  if (act === "finish"){
-    if (confirm("¿Terminar la sesión y guardarla en el historial?")) finishSession();
-    return;
-  }
-  if (act === "discard"){
-    if (confirm("¿Descartar la sesión? Se pierde todo lo registrado.")){
-      state.session = null; persist.session();
-      state.timer = { running:false, elapsed:0, startedAt:null }; persist.timer();
-      restStop(); go("home");
-    }
-    return;
-  }
-
-  /* cronómetro general */
-  if (act === "timerToggle") return timerToggle();
-  if (act === "timerReset"){
-    if (confirm("¿Reiniciar el cronómetro general a 00:00?")) timerReset();
-    return;
-  }
-
-  /* descanso */
-  if (act === "restGo")   return restStart(parseInt(btn.dataset.secs, 10));
-  if (act === "restAdd")  return restAdd(15000);
-  if (act === "restStop") return restStop();
-
-  /* ejercicios */
-  if (act === "toggleSet"){
-    const ex = state.session.exercises[+btn.dataset.ex];
-    const st = ex.sets[+btn.dataset.set];
-    st.done = !st.done;
-    persist.session();
-    if (st.done) restStart(ex.rest);
-    render();
-    return;
-  }
-  if (act === "addSet"){
-    const ex = state.session.exercises[+btn.dataset.ex];
-    const last = ex.sets[ex.sets.length - 1] || { weight:"", reps:"" };
-    ex.sets.push({ done:false, weight:last.weight || "", reps:last.reps || "" });
-    persist.session(); render(); return;
-  }
-  if (act === "delSet"){
-    const ex = state.session.exercises[+btn.dataset.ex];
-    if (ex.sets.length > 1){ ex.sets.pop(); persist.session(); render(); }
-    return;
-  }
-  if (act === "addExercise") return modalExercise(null);
-  if (act === "saveExercise"){
-    const idx = btn.dataset.idx;
-    const data = {
-      name: $("#eName").value.trim() || "Ejercicio",
-      sets: $("#eSets").value.trim() || "3",
-      reps: $("#eReps").value.trim() || "8-12",
-      rest: Math.max(10, parseInt($("#eRest").value, 10) || 90),
-      tempo: $("#eTempo").value.trim(),
-      rir: $("#eRIR").value.trim()
-    };
-    
-    // Parseo de series variables para ejercicios agregados a mano
-    let numSets = parseInt(data.sets);
-    if (isNaN(numSets)) numSets = 3;
-
-    if (idx === ""){
-      state.session.exercises.push({
-        name: data.name, reps: data.reps, rest: data.rest, tempo: data.tempo, rir: data.rir, notes: "",
-        sets: Array.from({ length: numSets }, () => ({ done:false, weight:"", reps:"" }))
-      });
-    } else {
-      const ex = state.session.exercises[+idx];
-      ex.name = data.name; ex.reps = data.reps; ex.rest = data.rest; ex.tempo = data.tempo; ex.rir = data.rir;
-      while (ex.sets.length < numSets) ex.sets.push({ done:false, weight:"", reps:"" });
-      while (ex.sets.length > numSets) ex.sets.pop();
-    }
-    persist.session(); closeModal(); render(); return;
-  }
-
-  /* plantillas */
-  if (act === "newTemplate")   return modalTemplate(null);
-  if (act === "editTemplate")  return modalTemplate(btn.dataset.id);
-  if (act === "tplAddRow"){
-    const list = $("#tplList");
-    const i = list.children.length;
-    const div = document.createElement("div");
-    div.className = "tpl-row"; div.dataset.row = i;
-    div.innerHTML = `
-      <div class="tpl-row-top">
-        <input class="inp" data-f="name" placeholder="Ejercicio" value="">
-        <button class="del" data-act="tplDelRow" data-i="${i}">×</button>
-      </div>
-      <div class="tpl-row-bot">
-        <input class="inp" data-f="sets" type="text" placeholder="Series (ej 3)" value="3">
-        <input class="inp" data-f="reps" placeholder="Reps" value="8-12">
-        <input class="inp" data-f="tempo" placeholder="Tempo" value="">
-        <input class="inp" data-f="rir" placeholder="RIR" value="">
-      </div>
-      <div class="tpl-row-bot">
-        <input class="inp" data-f="rest" type="number" min="10" step="5" placeholder="Descanso (seg)" value="90" style="grid-column: span 4;">
-      </div>`;
-    list.appendChild(div);
-    return;
-  }
-  if (act === "tplDelRow"){
-    const row = btn.closest(".tpl-row");
-    if (row) row.remove();
-    return;
-  }
-  if (act === "saveTemplate"){
-    const name = $("#tName").value.trim();
-    if (!name){ alert("Poné un nombre a la plantilla."); return; }
-    const exercises = [...document.querySelectorAll("#tplList .tpl-row")].map(r => ({
-      name: r.querySelector('[data-f="name"]').value.trim() || "Ejercicio",
-      sets: r.querySelector('[data-f="sets"]').value.trim() || "3",
-      reps: r.querySelector('[data-f="reps"]').value.trim() || "8-12",
-      tempo: r.querySelector('[data-f="tempo"]').value.trim(),
-      rir: r.querySelector('[data-f="rir"]').value.trim(),
-      rest: Math.max(10, parseInt(r.querySelector('[data-f="rest"]').value, 10) || 90)
-    })).filter(e => e.name);
-    const id = btn.dataset.id;
-    if (btn.dataset.new === "1"){
-      state.templates.push({ id, name, exercises });
-    } else {
-      const t = state.templates.find(x => x.id === id);
-      t.name = name; t.exercises = exercises;
-    }
-    persist.templates(); closeModal(); render(); return;
-  }
-  if (act === "deleteTemplate"){
-    if (!confirm("¿Eliminar esta plantilla?")) return;
-    state.templates = state.templates.filter(t => t.id !== btn.dataset.id);
-    persist.templates(); closeModal(); render(); return;
-  }
-
-  /* historial & IA */
-  if (act === "copyForAI"){
-    const limit = $("#aiRange").value;
-    const text = generateAIText(limit);
-    
-    navigator.clipboard.writeText(text).then(() => {
-      btn.textContent = "✓ ¡Copiado!";
-      btn.classList.remove("acc");
-      setTimeout(() => { btn.textContent = "Copiar reporte"; btn.classList.add("acc"); }, 2000);
-    }).catch(err => {
-      alert("Error al copiar. Tu navegador puede requerir HTTPS o permisos.");
-    });
-    return;
-  }
-  if (act === "clearHistory"){
-    if (confirm("¿Borrar todo el historial? No se puede deshacer.")){
-      state.history = []; persist.history(); render();
-    }
-    return;
-  }
-
-  /* perfil */
-  if (act === "saveProfile"){
-    state.profile = {
-      weight: $("#pWeight").value,
-      height: $("#pHeight").value,
-      age:    $("#pAge").value
-    };
-    persist.profile();
-    btn.textContent = "✓ Perfil guardado";
-    setTimeout(() => { btn.textContent = "Guardar perfil"; }, 1600);
-    return;
-  }
-
-  /* respaldo */
-  if (act === "exportData") return exportData();
-  if (act === "importData") return triggerImport();
-});
-
-/* inputs: pesos/reps + notas sin re-render + preview IMC en vivo */
-$("#view").addEventListener("input", e => {
-  // pesos/reps/notas de la sesión actual
-  const inp = e.target.closest("[data-ex]");
-  if (inp && state.session){
-    const ex = state.session.exercises[+inp.dataset.ex];
-    
-    // Si es el input de notas (textarea)
-    if (inp.dataset.f === "notes") {
-      if (ex) { ex.notes = inp.value; persist.session(); }
-      return;
-    }
-
-    // Si es peso o reps
-    const st = ex.sets[+inp.dataset.set];
-    if (ex && st){ st[inp.dataset.f] = inp.value; persist.session(); }
-    return;
-  }
-
-  // preview IMC
-  if (e.target.id === "pWeight" || e.target.id === "pHeight"){
-    const w = $("#pWeight") ? $("#pWeight").value : "";
-    const h = $("#pHeight") ? $("#pHeight").value : "";
-    const v = calcIMC(w, h);
-    const num = $("#imcNum"), tag = $("#imcTag");
-    const info = imcInfo(v);
-    if (num){
-      num.textContent = v ? v.toFixed(1) : "—";
-      num.style.color = v ? "var(--txt)" : "var(--muted)";
-    }
-    if (tag){
-      tag.textContent = info.label;
-      tag.className = "imc-tag " + info.cls;
-    }
-  }
-});
-
-/* ============================================================
-   ARRANQUE y PWA
-   ============================================================ */
-if (state.session) state.screen = "workout";
-persist.templates();
-render();
-
-// Lógica del botón de instalación
-let deferredPrompt;
-const installBtn = document.getElementById("installBtn");
-
-window.addEventListener("beforeinstallprompt", (e) => {
-  e.preventDefault();
-  deferredPrompt = e;
-  if (installBtn) installBtn.style.display = "block";
-});
-
-if (installBtn) {
-  installBtn.addEventListener("click", async () => {
-    if (!deferredPrompt) return;
-    deferredPrompt.prompt();
-    const { outcome } = await deferredPrompt.userChoice;
-    if (outcome === "accepted") installBtn.style.display = "none";
-    deferredPrompt = null;
-  });
-}
-
-// Registrar Service Worker para modo offline
-if ("serviceWorker" in navigator) {
-  window.addEventListener("load", () => {
-    navigator.serviceWorker.register("./sw.js").catch(() => {});
-  });
-}
-</script>
-</body>
-</html>
+      <div class="field" style
