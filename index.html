@@ -77,16 +77,20 @@ main{padding:16px;max-width:720px;margin:0 auto}
 .btn.rest{background:rgba(77,214,240,.1);border-color:rgba(77,214,240,.35);color:var(--acc2);
   padding:8px 12px;font-size:12.5px;border-radius:10px;font-weight:700;white-space:nowrap}
 
+/* Rediseño de cabecera para dar protagonismo al reloj */
 .sticky-head{
   position:sticky;top:57px;z-index:30;
-  background:rgba(13,17,23,.94);backdrop-filter:blur(12px);
-  border:1px solid var(--line);border-radius:var(--r);padding:13px 14px;margin-bottom:14px;
+  background:rgba(13,17,23,.96);backdrop-filter:blur(14px);
+  border:1px solid var(--line);border-radius:var(--r);padding:16px;margin-bottom:14px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
 }
+.head-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px}
 .title-sm{font-size:16px;font-weight:750;letter-spacing:-.01em}
-.timer{font-size:27px;font-weight:800;letter-spacing:.02em;
-  font-variant-numeric:tabular-nums;color:var(--acc);line-height:1}
-.timer.paused{color:var(--warn)}
-.progress{height:5px;background:#0a0e14;border-radius:99px;overflow:hidden;margin-top:11px}
+.timer{font-size:44px;font-weight:800;letter-spacing:-.02em;
+  font-variant-numeric:tabular-nums;color:var(--acc);line-height:1;
+  text-shadow: 0 0 20px rgba(139,241,74,0.3); text-align: center; margin: 10px 0;}
+.timer.paused{color:var(--warn); text-shadow: 0 0 20px rgba(255,176,32,0.3);}
+.progress{height:6px;background:#0a0e14;border-radius:99px;overflow:hidden;margin-top:8px}
 .progress i{display:block;height:100%;background:linear-gradient(90deg,var(--acc),var(--acc2));
   width:0;transition:width .3s ease}
 
@@ -100,27 +104,31 @@ main{padding:16px;max-width:720px;margin:0 auto}
   border-radius:8px;padding:8px 9px;font-size:13.5px;font-variant-numeric:tabular-nums;outline:none}
 .inp:focus{border-color:var(--acc2)}
 .inp::placeholder{color:#4c5a6b}
+textarea.inp{font-family:inherit;resize:vertical;min-height:40px}
 .check{height:34px;border-radius:9px;border:1px solid #2c3846;background:#0c1117;
   color:#4c5a6b;font-size:16px;font-weight:800;cursor:pointer}
 .check.on{background:var(--acc);border-color:var(--acc);color:#0b1206}
 
+/* Rediseño del dock de descanso para que sea gigante */
 .restdock{
   position:fixed;left:0;right:0;bottom:0;z-index:50;
   padding:12px 14px calc(12px + env(safe-area-inset-bottom));
-  background:rgba(15,20,27,.97);backdrop-filter:blur(14px);
-  border-top:1px solid var(--line);
+  background:rgba(15,20,27,.98);backdrop-filter:blur(14px);
+  border-top:2px solid var(--acc2);
+  box-shadow: 0 -10px 30px rgba(0,0,0,0.6);
 }
 .restpresets{display:flex;align-items:center;gap:7px;flex-wrap:wrap;justify-content:center}
 .chip{background:var(--card2);border:1px solid var(--line);color:var(--txt);
   padding:9px 14px;border-radius:11px;font-size:13.5px;font-weight:700;cursor:pointer;
   font-variant-numeric:tabular-nums}
 .chip:active{background:var(--acc);color:#0b1206}
-.restcount{display:flex;align-items:center;gap:14px;justify-content:center}
-.restnum{font-size:34px;font-weight:800;color:var(--acc2);font-variant-numeric:tabular-nums;
-  min-width:96px;text-align:center;line-height:1}
-.restbar{flex:1;max-width:220px;height:6px;background:#0a0e14;border-radius:99px;overflow:hidden}
+.restcount{display:flex;flex-direction:column;align-items:center;gap:8px;justify-content:center}
+.restnum{font-size:64px;font-weight:800;color:var(--acc2);font-variant-numeric:tabular-nums;
+  text-align:center;line-height:1; text-shadow: 0 0 20px rgba(77,214,240,0.4);}
+.restbar{width:100%;max-width:300px;height:8px;background:#0a0e14;border-radius:99px;overflow:hidden}
 .restbar i{display:block;height:100%;background:linear-gradient(90deg,var(--acc2),var(--acc));
   width:100%;transition:width .2s linear}
+.restactions{display:flex;gap:10px;margin-top:4px}
 
 .modal{position:fixed;inset:0;z-index:100;background:rgba(5,8,12,.72);
   display:none;align-items:flex-end;justify-content:center;backdrop-filter:blur(3px)}
@@ -141,7 +149,10 @@ main{padding:16px;max-width:720px;margin:0 auto}
   border-radius:11px;padding:12px 13px;font-size:15px;outline:none;
 }
 .field input:focus,.field select:focus{border-color:var(--acc2)}
-.tpl-row{display:grid;grid-template-columns:1fr 62px 78px 78px 32px;gap:6px;margin-bottom:6px}
+/* Editor de plantillas: 2 filas para que entren todos los datos */
+.tpl-row{background:#11161e;border:1px solid var(--line);border-radius:10px;padding:10px;margin-bottom:8px;display:flex;flex-direction:column;gap:8px}
+.tpl-row-top{display:grid;grid-template-columns:1fr 32px;gap:6px}
+.tpl-row-bot{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:6px}
 .tpl-row .inp{padding:9px}
 .tpl-row .del{background:transparent;border:1px solid #3a2630;color:var(--danger);
   border-radius:8px;cursor:pointer;font-size:15px}
@@ -228,36 +239,36 @@ function imcInfo(v){
    ============================================================ */
 const DEFAULT_TEMPLATES = [
   { id:"fullbody", name:"Full Body", exercises:[
-    { name:"Sentadilla",            sets:4, reps:"8-10",  rest:120 },
-    { name:"Press banca",           sets:4, reps:"8-10",  rest:120 },
-    { name:"Remo con barra",        sets:3, reps:"10-12", rest:90  },
-    { name:"Press militar",         sets:3, reps:"10-12", rest:90  },
-    { name:"Curl bíceps",           sets:3, reps:"12",    rest:60  },
-    { name:"Plancha",               sets:3, reps:"40 s",  rest:60  }
+    { name:"Sentadilla",            sets:"4", reps:"8-10",  rest:120, tempo:"3-1-2", rir:"2" },
+    { name:"Press banca",           sets:"4", reps:"8-10",  rest:120, tempo:"2-0-2", rir:"2" },
+    { name:"Remo con barra",        sets:"3", reps:"10-12", rest:90,  tempo:"2-0-1", rir:"1-2" },
+    { name:"Press militar",         sets:"3", reps:"10-12", rest:90,  tempo:"2-0-2", rir:"2" },
+    { name:"Curl bíceps",           sets:"3", reps:"12",    rest:60,  tempo:"2-0-1", rir:"1" },
+    { name:"Plancha",               sets:"3", reps:"40 s",  rest:60,  tempo:"-",     rir:"-" }
   ]},
   { id:"push", name:"Push · Empuje", exercises:[
-    { name:"Press banca",           sets:4, reps:"6-8",   rest:150 },
-    { name:"Press inclinado manc.", sets:3, reps:"10-12", rest:90  },
-    { name:"Aperturas",             sets:3, reps:"12-15", rest:60  },
-    { name:"Press militar",         sets:3, reps:"8-10",  rest:120 },
-    { name:"Elevaciones laterales", sets:3, reps:"15",    rest:60  },
-    { name:"Fondos en paralelas",   sets:3, reps:"10-12", rest:90  }
+    { name:"Press banca",           sets:"4", reps:"6-8",   rest:150, tempo:"3-1-1", rir:"1-2" },
+    { name:"Press inclinado manc.", sets:"3", reps:"10-12", rest:90,  tempo:"2-0-2", rir:"2" },
+    { name:"Aperturas",             sets:"3", reps:"12-15", rest:60,  tempo:"2-0-2", rir:"1" },
+    { name:"Press militar",         sets:"3", reps:"8-10",  rest:120, tempo:"2-0-2", rir:"2" },
+    { name:"Elevaciones laterales", sets:"3", reps:"15",    rest:60,  tempo:"2-0-1", rir:"1" },
+    { name:"Fondos en paralelas",   sets:"3", reps:"10-12", rest:90,  tempo:"2-0-2", rir:"1-2" }
   ]},
   { id:"pull", name:"Pull · Tirón", exercises:[
-    { name:"Dominadas",             sets:4, reps:"6-10",  rest:150 },
-    { name:"Remo con barra",        sets:4, reps:"8-10",  rest:120 },
-    { name:"Jalón al pecho",        sets:3, reps:"10-12", rest:90  },
-    { name:"Face pull",             sets:3, reps:"15",    rest:60  },
-    { name:"Curl bíceps barra",     sets:3, reps:"10-12", rest:60  },
-    { name:"Curl martillo",         sets:3, reps:"12",    rest:60  }
+    { name:"Dominadas",             sets:"4", reps:"6-10",  rest:150, tempo:"2-0-1", rir:"1" },
+    { name:"Remo con barra",        sets:"4", reps:"8-10",  rest:120, tempo:"2-0-1", rir:"2" },
+    { name:"Jalón al pecho",        sets:"3", reps:"10-12", rest:90,  tempo:"2-0-2", rir:"2" },
+    { name:"Face pull",             sets:"3", reps:"15",    rest:60,  tempo:"2-0-2", rir:"1" },
+    { name:"Curl bíceps barra",     sets:"3", reps:"10-12", rest:60,  tempo:"2-0-2", rir:"1" },
+    { name:"Curl martillo",         sets:"3", reps:"12",    rest:60,  tempo:"2-0-1", rir:"1" }
   ]},
   { id:"legs", name:"Pierna", exercises:[
-    { name:"Sentadilla",            sets:4, reps:"6-8",   rest:150 },
-    { name:"Peso muerto rumano",    sets:3, reps:"8-10",  rest:120 },
-    { name:"Prensa",                sets:3, reps:"10-12", rest:90  },
-    { name:"Zancadas",              sets:3, reps:"12 x pierna", rest:90 },
-    { name:"Curl femoral",          sets:3, reps:"12-15", rest:60  },
-    { name:"Gemelos",               sets:4, reps:"15-20", rest:45  }
+    { name:"Sentadilla",            sets:"4", reps:"6-8",   rest:150, tempo:"3-1-2", rir:"1-2" },
+    { name:"Peso muerto rumano",    sets:"3", reps:"8-10",  rest:120, tempo:"3-1-2", rir:"2" },
+    { name:"Prensa",                sets:"3", reps:"10-12", rest:90,  tempo:"2-0-2", rir:"1" },
+    { name:"Zancadas",              sets:"3", reps:"12 x pierna", rest:90, tempo:"2-0-2", rir:"2" },
+    { name:"Curl femoral",          sets:"3", reps:"12-15", rest:60,  tempo:"2-1-1", rir:"1" },
+    { name:"Gemelos",               sets:"4", reps:"15-20", rest:45,  tempo:"2-1-2", rir:"0-1" }
   ]}
 ];
 
@@ -375,7 +386,7 @@ function renderHome(){
         <div class="row between">
           <div>
             <div class="exname">${esc(t.name)}</div>
-            <div class="lbl">${t.exercises.length} ejercicios · ${t.exercises.reduce((a,e)=>a+e.sets,0)} series</div>
+            <div class="lbl">${t.exercises.length} ejercicios</div>
           </div>
           <div class="row gap6">
             <button class="btn ghost sm" data-act="editTemplate" data-id="${t.id}">Editar</button>
@@ -461,20 +472,21 @@ function renderWorkout(){
 
   return `
   <div class="sticky-head">
-    <div class="row between">
+    <div class="head-top">
       <div>
         <div class="lbl">Sesión</div>
         <div class="title-sm">${esc(s.templateName)}</div>
         <div class="lbl">${fmtDate(s.startedAt)} · ${fmtTime(s.startedAt)}</div>
       </div>
-      <div style="text-align:right">
-        <div class="timer ${running ? "" : "paused"}" id="clock">${fmtClock(timerElapsed())}</div>
-        <div class="row gap6 mt8" style="justify-content:flex-end">
-          <button class="btn ghost sm" data-act="timerToggle">${running ? "Pausar" : "Iniciar"}</button>
-          <button class="btn ghost sm" data-act="timerReset">Reset</button>
-        </div>
+      <div class="row gap6">
+        <button class="btn ghost sm" data-act="timerToggle">${running ? "Pausar" : "Iniciar"}</button>
+        <button class="btn ghost sm" data-act="timerReset">Reset</button>
       </div>
     </div>
+    
+    <!-- Reloj principal con protagonismo -->
+    <div class="timer ${running ? "" : "paused"}" id="clock">${fmtClock(timerElapsed())}</div>
+    
     <div class="progress"><i style="width:${pct}%"></i></div>
     <div class="lbl mt8" style="text-align:right">${doneSets}/${totalSets} series · ${pct}%</div>
   </div>
@@ -491,12 +503,18 @@ function renderWorkout(){
 }
 
 function renderExercise(ex, i){
+  // Info extra (Tempo y RIR) si existen
+  let extras = [];
+  if (ex.tempo && ex.tempo !== "-") extras.push(`Tempo: ${esc(ex.tempo)}`);
+  if (ex.rir && ex.rir !== "-") extras.push(`RIR: ${esc(ex.rir)}`);
+  const extrasTxt = extras.length ? ` · ${extras.join(" · ")}` : "";
+
   return `
   <div class="card">
     <div class="row between">
       <div>
         <div class="exname">${esc(ex.name)}</div>
-        <div class="lbl">${ex.sets.length} × ${esc(ex.reps)} · descanso ${fmtShort(ex.rest)}</div>
+        <div class="lbl">${ex.sets.length} × ${esc(ex.reps)}${extrasTxt} · desc. ${fmtShort(ex.rest)}</div>
       </div>
       <button class="btn rest" data-act="restGo" data-secs="${ex.rest}">⏱ ${fmtShort(ex.rest)}</button>
     </div>
@@ -516,6 +534,11 @@ function renderExercise(ex, i){
     <div class="row gap6 mt8">
       <button class="btn ghost xs" data-act="addSet" data-ex="${i}">+ Serie</button>
       <button class="btn ghost xs" data-act="delSet" data-ex="${i}">− Serie</button>
+    </div>
+    <!-- Campo de Notas por ejercicio -->
+    <div class="mt8">
+      <textarea class="inp notes" rows="1" placeholder="Notas (sensaciones, molestias, etc.)"
+                data-ex="${i}" data-f="notes">${esc(ex.notes || "")}</textarea>
     </div>
   </div>`;
 }
@@ -558,7 +581,7 @@ function renderHistory(){
     <button class="btn danger big mt12" data-act="clearHistory">Borrar historial</button>`;
 }
 
-/* ---------- REST DOCK ---------- */
+/* ---------- REST DOCK (Protagonismo) ---------- */
 function renderRestDock(){
   const dock = $("#restDock");
   if (state.screen !== "workout" || !state.session){ dock.classList.add("hidden"); return; }
@@ -568,15 +591,18 @@ function renderRestDock(){
     const left = Math.max(0, state.rest.endsAt - Date.now());
     dock.innerHTML = `
       <div class="restcount">
+        <div class="lbl" style="color:var(--acc2)">Tiempo de Descanso</div>
         <div class="restnum" id="restNum">${fmtSecs(Math.ceil(left / 1000))}</div>
         <div class="restbar"><i id="restBar" style="width:${state.rest.total ? (left / state.rest.total * 100) : 0}%"></i></div>
-        <button class="btn ghost sm" data-act="restAdd">+15s</button>
-        <button class="btn ghost sm" data-act="restStop">Detener</button>
+        <div class="restactions">
+          <button class="btn ghost sm" data-act="restAdd">+15s</button>
+          <button class="btn danger sm" data-act="restStop">Detener</button>
+        </div>
       </div>`;
   } else {
     dock.innerHTML = `
       <div class="restpresets">
-        <span class="lbl" style="margin-right:4px">Descanso</span>
+        <span class="lbl" style="margin-right:4px">Descanso manual</span>
         ${[45, 60, 90, 120, 180].map(s =>
           `<button class="chip" data-act="restGo" data-secs="${s}">${fmtShort(s)}</button>`).join("")}
       </div>`;
@@ -639,14 +665,23 @@ function modalNewSession(preId){
 
 function modalExercise(exIdx){
   const isEdit = exIdx !== undefined && exIdx !== null;
-  const ex = isEdit ? state.session.exercises[exIdx] : { name:"", reps:"8-12", rest:90, sets:[] };
+  const ex = isEdit ? state.session.exercises[exIdx] : { name:"", reps:"8-12", rest:90, tempo:"", rir:"", notes:"" };
   openModal(`
     <h2>${isEdit ? "Editar ejercicio" : "Agregar ejercicio"}</h2>
     <div class="field"><label>Nombre</label><input id="eName" value="${esc(ex.name)}" placeholder="Ej: Press banca"></div>
-    <div class="field"><label>Series</label><input id="eSets" type="number" min="1" max="20" value="${ex.sets.length || 3}"></div>
-    <div class="field"><label>Reps objetivo</label><input id="eReps" value="${esc(ex.reps)}" placeholder="Ej: 8-12"></div>
-    <div class="field"><label>Descanso (segundos)</label><input id="eRest" type="number" min="10" max="600" step="5" value="${ex.rest}"></div>
-    <button class="btn acc big" data-act="saveExercise" data-idx="${isEdit ? exIdx : ""}">${isEdit ? "Guardar" : "Agregar"}</button>
+    
+    <div class="row gap8">
+      <div class="field" style="flex:1"><label>Series</label><input id="eSets" type="text" value="${ex.sets && ex.sets.length ? ex.sets.length : 3}" placeholder="Ej: 3 o 2-3"></div>
+      <div class="field" style="flex:1"><label>Reps objetivo</label><input id="eReps" value="${esc(ex.reps)}" placeholder="Ej: 8-12"></div>
+      <div class="field" style="flex:1"><label>Desc. (seg)</label><input id="eRest" type="number" min="10" max="600" step="5" value="${ex.rest}"></div>
+    </div>
+    
+    <div class="row gap8">
+      <div class="field" style="flex:1"><label>Tempo</label><input id="eTempo" value="${esc(ex.tempo || "")}" placeholder="Ej: 3-1-2"></div>
+      <div class="field" style="flex:1"><label>RIR</label><input id="eRIR" value="${esc(ex.rir || "")}" placeholder="Ej: 1-2"></div>
+    </div>
+
+    <button class="btn acc big mt8" data-act="saveExercise" data-idx="${isEdit ? exIdx : ""}">${isEdit ? "Guardar" : "Agregar"}</button>
     <button class="btn ghost big mt8" data-act="closeModal">Cancelar</button>
   `);
 }
@@ -664,11 +699,19 @@ function modalTemplate(tplId){
     <div id="tplList">
       ${tpl.exercises.map((e, i) => `
         <div class="tpl-row" data-row="${i}">
-          <input class="inp" data-f="name" placeholder="Ejercicio" value="${esc(e.name)}">
-          <input class="inp" data-f="sets" type="number" min="1" placeholder="Ser" value="${e.sets}">
-          <input class="inp" data-f="reps" placeholder="Reps" value="${esc(e.reps)}">
-          <input class="inp" data-f="rest" type="number" min="10" step="5" placeholder="Desc" value="${e.rest}">
-          <button class="del" data-act="tplDelRow" data-i="${i}">×</button>
+          <div class="tpl-row-top">
+            <input class="inp" data-f="name" placeholder="Ejercicio" value="${esc(e.name)}">
+            <button class="del" data-act="tplDelRow" data-i="${i}">×</button>
+          </div>
+          <div class="tpl-row-bot">
+            <input class="inp" data-f="sets" type="text" placeholder="Series (ej 3)" value="${esc(e.sets)}">
+            <input class="inp" data-f="reps" placeholder="Reps" value="${esc(e.reps)}">
+            <input class="inp" data-f="tempo" placeholder="Tempo" value="${esc(e.tempo || "")}">
+            <input class="inp" data-f="rir" placeholder="RIR" value="${esc(e.rir || "")}">
+          </div>
+          <div class="tpl-row-bot">
+            <input class="inp" data-f="rest" type="number" min="10" step="5" placeholder="Descanso (seg)" value="${e.rest}" style="grid-column: span 4;">
+          </div>
         </div>`).join("")}
     </div>
     <button class="btn ghost sm mt8" data-act="tplAddRow">+ Agregar fila</button>
@@ -753,7 +796,7 @@ function importData(file){
 
 function generateAIText(limit) {
   const p = state.profile;
-  let hist = state.history.slice().reverse(); // Más recientes primero
+  let hist = state.history.slice().reverse();
   if (limit !== "all") hist = hist.slice(0, parseInt(limit));
   
   const imcVal = calcIMC(p.weight, p.height);
@@ -773,15 +816,25 @@ function generateAIText(limit) {
       const done = ex.sets.filter(s => s.done);
       if (done.length === 0) return;
       
-      txt += `- ${ex.name} (Objetivo: ${ex.reps}):\n`;
+      let exTitle = `- ${ex.name} (Objetivo: ${ex.reps}`;
+      if (ex.tempo) exTitle += ` | Tempo: ${ex.tempo}`;
+      if (ex.rir) exTitle += ` | RIR: ${ex.rir}`;
+      exTitle += `):\n`;
+      txt += exTitle;
+
       done.forEach((s, i) => {
         txt += `   Serie ${i+1}: ${s.weight || "0"}kg x ${s.reps || "?"} reps\n`;
       });
+      
+      // Agregar notas al reporte de la IA si existen
+      if (ex.notes && ex.notes.trim() !== "") {
+        txt += `   [Nota del atleta: ${ex.notes.trim()}]\n`;
+      }
     });
     txt += `\n----------------------------------------\n\n`;
   });
 
-  txt += `Por favor, analiza la progresión de mis cargas, detecta si hay estancamiento en algún ejercicio y sugiere qué pesos o repeticiones debería intentar en mi próxima sesión. Prioriza la claridad.`;
+  txt += `Por favor, analiza la progresión de mis cargas, detecta si hay estancamiento en algún ejercicio y sugiere qué pesos o repeticiones debería intentar en mi próxima sesión. Ten en cuenta las notas que dejé sobre sensaciones o molestias. Prioriza la claridad.`;
 
   return txt;
 }
@@ -792,10 +845,17 @@ function generateAIText(limit) {
 function startSession(templateId, startTs){
   const tpl = templateId ? state.templates.find(t => t.id === templateId) : null;
   const exercises = tpl
-    ? tpl.exercises.map(e => ({
-        name: e.name, reps: e.reps, rest: e.rest,
-        sets: Array.from({ length: e.sets }, () => ({ done:false, weight:"", reps:"" }))
-      }))
+    ? tpl.exercises.map(e => {
+        // Manejo de series variables: "2-3" se convierte en 2
+        let numSets = parseInt(e.sets);
+        if (isNaN(numSets)) numSets = 3; 
+        
+        return {
+          name: e.name, reps: e.reps, rest: e.rest, 
+          tempo: e.tempo, rir: e.rir, notes: "",
+          sets: Array.from({ length: numSets }, () => ({ done:false, weight:"", reps:"" }))
+        };
+      })
     : [];
 
   state.session = {
@@ -917,20 +977,27 @@ document.addEventListener("click", e => {
     const idx = btn.dataset.idx;
     const data = {
       name: $("#eName").value.trim() || "Ejercicio",
-      sets: Math.max(1, parseInt($("#eSets").value, 10) || 3),
+      sets: $("#eSets").value.trim() || "3",
       reps: $("#eReps").value.trim() || "8-12",
-      rest: Math.max(10, parseInt($("#eRest").value, 10) || 90)
+      rest: Math.max(10, parseInt($("#eRest").value, 10) || 90),
+      tempo: $("#eTempo").value.trim(),
+      rir: $("#eRIR").value.trim()
     };
+    
+    // Parseo de series variables para ejercicios agregados a mano
+    let numSets = parseInt(data.sets);
+    if (isNaN(numSets)) numSets = 3;
+
     if (idx === ""){
       state.session.exercises.push({
-        name: data.name, reps: data.reps, rest: data.rest,
-        sets: Array.from({ length: data.sets }, () => ({ done:false, weight:"", reps:"" }))
+        name: data.name, reps: data.reps, rest: data.rest, tempo: data.tempo, rir: data.rir, notes: "",
+        sets: Array.from({ length: numSets }, () => ({ done:false, weight:"", reps:"" }))
       });
     } else {
       const ex = state.session.exercises[+idx];
-      ex.name = data.name; ex.reps = data.reps; ex.rest = data.rest;
-      while (ex.sets.length < data.sets) ex.sets.push({ done:false, weight:"", reps:"" });
-      while (ex.sets.length > data.sets) ex.sets.pop();
+      ex.name = data.name; ex.reps = data.reps; ex.rest = data.rest; ex.tempo = data.tempo; ex.rir = data.rir;
+      while (ex.sets.length < numSets) ex.sets.push({ done:false, weight:"", reps:"" });
+      while (ex.sets.length > numSets) ex.sets.pop();
     }
     persist.session(); closeModal(); render(); return;
   }
@@ -944,11 +1011,19 @@ document.addEventListener("click", e => {
     const div = document.createElement("div");
     div.className = "tpl-row"; div.dataset.row = i;
     div.innerHTML = `
-      <input class="inp" data-f="name" placeholder="Ejercicio" value="">
-      <input class="inp" data-f="sets" type="number" min="1" placeholder="Ser" value="3">
-      <input class="inp" data-f="reps" placeholder="Reps" value="8-12">
-      <input class="inp" data-f="rest" type="number" min="10" step="5" placeholder="Desc" value="90">
-      <button class="del" data-act="tplDelRow" data-i="${i}">×</button>`;
+      <div class="tpl-row-top">
+        <input class="inp" data-f="name" placeholder="Ejercicio" value="">
+        <button class="del" data-act="tplDelRow" data-i="${i}">×</button>
+      </div>
+      <div class="tpl-row-bot">
+        <input class="inp" data-f="sets" type="text" placeholder="Series (ej 3)" value="3">
+        <input class="inp" data-f="reps" placeholder="Reps" value="8-12">
+        <input class="inp" data-f="tempo" placeholder="Tempo" value="">
+        <input class="inp" data-f="rir" placeholder="RIR" value="">
+      </div>
+      <div class="tpl-row-bot">
+        <input class="inp" data-f="rest" type="number" min="10" step="5" placeholder="Descanso (seg)" value="90" style="grid-column: span 4;">
+      </div>`;
     list.appendChild(div);
     return;
   }
@@ -962,8 +1037,10 @@ document.addEventListener("click", e => {
     if (!name){ alert("Poné un nombre a la plantilla."); return; }
     const exercises = [...document.querySelectorAll("#tplList .tpl-row")].map(r => ({
       name: r.querySelector('[data-f="name"]').value.trim() || "Ejercicio",
-      sets: Math.max(1, parseInt(r.querySelector('[data-f="sets"]').value, 10) || 3),
+      sets: r.querySelector('[data-f="sets"]').value.trim() || "3",
       reps: r.querySelector('[data-f="reps"]').value.trim() || "8-12",
+      tempo: r.querySelector('[data-f="tempo"]').value.trim(),
+      rir: r.querySelector('[data-f="rir"]').value.trim(),
       rest: Math.max(10, parseInt(r.querySelector('[data-f="rest"]').value, 10) || 90)
     })).filter(e => e.name);
     const id = btn.dataset.id;
@@ -1020,16 +1097,25 @@ document.addEventListener("click", e => {
   if (act === "importData") return triggerImport();
 });
 
-/* inputs: pesos/reps sin re-render + preview IMC en vivo */
+/* inputs: pesos/reps + notas sin re-render + preview IMC en vivo */
 $("#view").addEventListener("input", e => {
-  // pesos/reps
-  const inp = e.target.closest("input[data-ex]");
+  // pesos/reps/notas de la sesión actual
+  const inp = e.target.closest("[data-ex]");
   if (inp && state.session){
     const ex = state.session.exercises[+inp.dataset.ex];
+    
+    // Si es el input de notas (textarea)
+    if (inp.dataset.f === "notes") {
+      if (ex) { ex.notes = inp.value; persist.session(); }
+      return;
+    }
+
+    // Si es peso o reps
     const st = ex.sets[+inp.dataset.set];
     if (ex && st){ st[inp.dataset.f] = inp.value; persist.session(); }
     return;
   }
+
   // preview IMC
   if (e.target.id === "pWeight" || e.target.id === "pHeight"){
     const w = $("#pWeight") ? $("#pWeight").value : "";
