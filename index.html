@@ -168,24 +168,25 @@ textarea.inp{font-family:inherit;resize:vertical;min-height:40px}
 .imc-tag.danger{background:rgba(255,93,93,.12);color:var(--danger)}
 
 /* ---------------------------------------------------
-   VISTA DE ENFOQUE (TRANSLÚCIDA Y CENTRADA)
+   VISTA DE ENFOQUE (TRANSLÚCIDA Y DINÁMICA)
 --------------------------------------------------- */
 .focus-modal{
   position:fixed; inset:0; z-index:200; 
-  background:rgba(13,17,23,.6); /* Fondo translúcido */
+  background:rgba(13,17,23,.6);
   display:none; align-items:center; justify-content:center;
-  backdrop-filter:blur(10px); /* Efecto vidrio */
+  backdrop-filter:blur(10px);
 }
 .focus-modal.open{ display:flex; }
 .focus-sheet{
   width:90%; max-width:400px;
-  background:rgba(22,28,38,.85); /* Tarjeta también traslúcida */
+  background:rgba(22,28,38,.9);
   border:1px solid rgba(255,255,255,.1);
   border-radius:24px;
   padding:24px 20px;
   animation:zoomIn .25s cubic-bezier(0.175, 0.885, 0.32, 1.1);
   box-shadow: 0 20px 50px rgba(0,0,0,0.9);
   backdrop-filter:blur(20px);
+  transition: height 0.3s ease;
 }
 @keyframes zoomIn { from{ transform:scale(.9); opacity:0; } to{ transform:scale(1); opacity:1; } }
 
@@ -195,42 +196,42 @@ textarea.inp{font-family:inherit;resize:vertical;min-height:40px}
 .focus-meta{ font-size:12px; color:var(--acc2); font-weight:700; margin-top:6px; display:flex; justify-content:center; gap:8px;}
 .focus-meta span{ background:rgba(77,214,240,.1); padding:3px 8px; border-radius:6px; border:1px solid rgba(77,214,240,.2);}
 
-/* Reloj / Estado */
+/* Reloj de Descanso */
 .focus-timer-container{
   position:relative; width:180px; height:180px; margin:0 auto 24px;
   display:flex; flex-direction:column; align-items:center; justify-content:center;
 }
 .focus-timer-text{
-  font-size:44px; font-weight:800; font-variant-numeric:tabular-nums;
-  color:var(--acc); text-shadow:0 0 20px rgba(139,241,74,.4); z-index:10;
-  transition: color 0.3s;
+  font-size:48px; font-weight:800; font-variant-numeric:tabular-nums;
+  color:var(--acc2); text-shadow:0 0 20px rgba(77,214,240,.4); z-index:10;
 }
-.focus-timer-text.resting { color:var(--acc2); text-shadow:0 0 20px rgba(77,214,240,.4); }
 .focus-timer-label{
-  font-size:11px; text-transform:uppercase;
-  letter-spacing:.1em; color:var(--muted); z-index:10; margin-top:4px;
+  font-size:12px; text-transform:uppercase; font-weight:800;
+  letter-spacing:.1em; color:var(--acc2); z-index:10; margin-top:4px;
 }
 .focus-circle{ position:absolute; top:0; left:0; width:100%; height:100%; transform:rotate(-90deg);}
 .focus-circle circle{ fill:none; stroke-width:8; stroke-linecap:round; }
-.focus-circle .bg{ stroke:#1f2833; }
-.focus-circle .fg{ stroke:var(--acc); transition:stroke-dashoffset .2s linear, stroke 0.3s;}
+.focus-circle .bg{ stroke:rgba(77,214,240,.1); }
+.focus-circle .fg{ stroke:var(--acc2); transition:stroke-dashoffset .2s linear;}
 
+/* Controles de Peso y Reps (Gigantes) */
 .focus-controls{ display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:24px;}
 .focus-control-box{
-  background:rgba(17,22,30,.7); border:1px solid var(--line); border-radius:16px;
-  padding:10px; display:flex; align-items:center; justify-content:space-between;
+  background:rgba(17,22,30,.8); border:1px solid var(--line); border-radius:16px;
+  padding:16px 10px; display:flex; align-items:center; justify-content:space-between;
 }
 .focus-btn-step{
-  width:40px; height:40px; border-radius:50%; background:rgba(29,37,49,.8);
-  border:none; color:var(--txt); font-size:20px; font-weight:800;
+  width:44px; height:44px; border-radius:50%; background:rgba(29,37,49,.9);
+  border:none; color:var(--txt); font-size:24px; font-weight:800;
   cursor:pointer; display:flex; align-items:center; justify-content:center;
 }
 .focus-btn-step:active{ background:var(--acc); color:#000; }
-.focus-val{ font-size:26px; font-weight:800; text-align:center; flex:1; font-variant-numeric:tabular-nums;}
-.focus-val-lbl{ font-size:10px; color:var(--muted); text-align:center; text-transform:uppercase; font-weight:700; margin-top:-2px;}
+.focus-val{ font-size:36px; font-weight:800; text-align:center; flex:1; font-variant-numeric:tabular-nums; margin-bottom:-4px;}
+.focus-val-lbl{ font-size:12px; color:var(--muted); text-align:center; text-transform:uppercase; font-weight:700;}
+
 .focus-btn-check{
-  width:100%; padding:18px; border-radius:16px; background:var(--acc);
-  color:#000; font-size:16px; font-weight:800; border:none; cursor:pointer;
+  width:100%; padding:20px; border-radius:16px; background:var(--acc);
+  color:#000; font-size:17px; font-weight:800; border:none; cursor:pointer;
   display:flex; align-items:center; justify-content:center; gap:8px;
   transition: background 0.3s;
 }
@@ -242,7 +243,7 @@ textarea.inp{font-family:inherit;resize:vertical;min-height:40px}
 
 <header class="topbar">
  <button id="installBtn" style="display:none; background:var(--acc2); color:#000; border:none; padding:6px 10px; border-radius:8px; font-weight:bold; font-size:12px; margin-right:10px;">Instalar App</button>
-  <div class="brand">GYM<b>LOG</b> <span>v2.3</span></div>
+  <div class="brand">GYM<b>LOG</b> <span>v2.4</span></div>
   <nav>
     <button data-nav="home">Inicio</button>
     <button data-nav="profile">Perfil</button>
@@ -336,7 +337,7 @@ const state = {
   session:   DB.get("ft_session", null),
   timer:     DB.get("ft_timer", { running:false, elapsed:0, startedAt:null }),
   rest:      { endsAt: null, total: 0 },
-  focus:     { exIdx: null, setIdx: null }
+  focus:     { exIdx: null, setIdx: null, resting: false }
 };
 
 const persist = {
@@ -620,7 +621,6 @@ function renderHistory(){
 
 function renderRestDock(){
   const dock = $("#restDock");
-  // Ocultar el dock si estamos en modo Focus
   if (state.screen !== "workout" || !state.session || $("#focusModal").classList.contains("open")){ 
     dock.classList.add("hidden"); 
     return; 
@@ -657,13 +657,9 @@ function updateClockUI(){
   }
 }
 
-/* ============================================================
-   EL MOTOR DEL RELOJ (TICK) - AHORA ACTUALIZA TODO
-   ============================================================ */
 function tick(){
   updateClockUI();
   
-  // 1. Actualizar el Dock de Descanso (si está visible)
   if (state.rest.endsAt){
     const left = state.rest.endsAt - Date.now();
     const num = $("#restNum"), bar = $("#restBar");
@@ -672,54 +668,58 @@ function tick(){
       state.rest.endsAt = null; state.rest.total = 0;
       beep(); 
       renderRestDock();
-      updateFocusClockUI(); // Avisa al modal que terminó
+      if (state.focus.resting) {
+        renderFocusContent(); // Al terminar la pausa, mostramos los controles
+      }
     } else {
       if (num) num.textContent = fmtSecs(Math.ceil(left / 1000));
       if (bar) bar.style.width = (state.rest.total ? left / state.rest.total * 100 : 0) + "%";
+      updateFocusClock(); // Actualizar los números del reloj en el modal
     }
   }
-
-  // 2. Actualizar el Reloj dentro del Modal de Enfoque (si está abierto)
-  updateFocusClockUI();
 }
 setInterval(tick, 200);
 
 /* ============================================================
-   VISTA DE ENFOQUE (FOCUS MODE)
+   VISTA DE ENFOQUE (FOCUS MODE DINÁMICO)
    ============================================================ */
 function openFocus(exIdx, setIdx) {
-  state.focus = { exIdx, setIdx };
+  state.focus = { exIdx, setIdx, resting: false };
+  renderFocusContent();
+  $("#focusModal").classList.add("open");
+}
+
+function renderFocusContent() {
+  const exIdx = state.focus.exIdx;
+  const setIdx = state.focus.setIdx;
+  if (exIdx === null) return;
+
   const ex = state.session.exercises[exIdx];
   const st = ex.sets[setIdx];
-
   const isLastSet = setIdx >= ex.sets.length - 1;
+  const isResting = state.focus.resting;
 
-  const modal = $("#focusModal");
-  modal.innerHTML = `
-    <div class="focus-sheet">
-      <div class="focus-header">
-        <div class="focus-title">${esc(ex.name)}</div>
-        <div class="focus-sub">Serie ${setIdx + 1} de ${ex.sets.length} · Objetivo: ${esc(ex.reps)} reps</div>
-        <div class="focus-meta">
-          ${ex.tempo ? `<span>Tempo: ${ex.tempo}</span>` : ""}
-          ${ex.rir ? `<span>RIR: ${ex.rir}</span>` : ""}
-        </div>
-      </div>
+  let timerHtml = "";
+  let controlsHtml = "";
 
+  if (isResting) {
+    // ESTADO: PAUSA / DESCANSO
+    timerHtml = `
       <div class="focus-timer-container">
         <svg class="focus-circle" viewBox="0 0 100 100">
           <circle class="bg" cx="50" cy="50" r="45"></circle>
-          <!-- Aro de progreso: vacío al inicio, se llena o vacía al descansar -->
-          <circle class="fg" id="focusRing" cx="50" cy="50" r="45" stroke-dasharray="283" stroke-dashoffset="283"></circle>
+          <circle class="fg" id="focusRing" cx="50" cy="50" r="45" stroke-dasharray="283" stroke-dashoffset="0"></circle>
         </svg>
-        
-        <!-- Reloj / Estado -->
-        <div id="focusClockContainer">
-          <div class="focus-timer-text" id="focusClock">💪</div>
-          <div class="focus-timer-label" id="focusClockLbl">Listo para la serie</div>
-        </div>
+        <div class="focus-timer-text" id="focusClock">00:00</div>
+        <div class="focus-timer-label">Pausa</div>
       </div>
-
+    `;
+    // No controls while resting
+    controlsHtml = `<div style="height: 120px;"></div>`; 
+  } else {
+    // ESTADO: LISTO PARA LA SERIE
+    timerHtml = `<div style="height: 60px; display:flex; align-items:center; justify-content:center; font-size:40px;">💪</div>`;
+    controlsHtml = `
       <div class="focus-controls">
         <div class="focus-control-box">
           <button class="focus-btn-step" data-act="focusStep" data-f="weight" data-dir="-1">−</button>
@@ -739,20 +739,38 @@ function openFocus(exIdx, setIdx) {
           <button class="focus-btn-step" data-act="focusStep" data-f="reps" data-dir="1">+</button>
         </div>
       </div>
+    `;
+  }
 
-      <button class="focus-btn-check ${isLastSet ? 'close-btn' : ''}" data-act="${isLastSet ? 'focusCloseDone' : 'focusComplete'}" data-ex="${exIdx}" data-set="${setIdx}">
-        ${isLastSet ? '✓ Cerrar y Finalizar' : '✓ Completar Serie'}
+  $("#focusModal").innerHTML = `
+    <div class="focus-sheet">
+      <div class="focus-header">
+        <div class="focus-title">${esc(ex.name)}</div>
+        <div class="focus-sub">Serie ${setIdx + 1} de ${ex.sets.length} · Objetivo: ${esc(ex.reps)} reps</div>
+        <div class="focus-meta">
+          ${ex.tempo ? `<span>Tempo: ${ex.tempo}</span>` : ""}
+          ${ex.rir ? `<span>RIR: ${ex.rir}</span>` : ""}
+        </div>
+      </div>
+
+      ${timerHtml}
+      ${controlsHtml}
+
+      <button class="focus-btn-check ${isLastSet && !isResting ? 'close-btn' : ''}" data-act="${isLastSet && !isResting ? 'focusCloseDone' : 'focusComplete'}" data-ex="${exIdx}" data-set="${setIdx}">
+        ${isResting ? 'Terminar Pausa' : (isLastSet ? '✓ Cerrar y Finalizar' : '✓ Completar Serie')}
       </button>
     </div>
   `;
-  modal.classList.add("open");
-  updateFocusClockUI();
+
+  if (isResting) {
+    updateFocusClock();
+  }
 }
 
 function closeFocus() {
   $("#focusModal").classList.remove("open");
   $("#focusModal").innerHTML = "";
-  state.focus = { exIdx: null, setIdx: null };
+  state.focus = { exIdx: null, setIdx: null, resting: false };
   render(); 
 }
 
@@ -772,35 +790,17 @@ function focusStep(field, dir) {
   if (field === "reps") $("#focusReps").textContent = st[field];
 }
 
-function updateFocusClockUI() {
+function updateFocusClock() {
   const clock = $("#focusClock");
-  if (!clock) return;
+  if (!clock || !state.rest.endsAt) return;
 
-  if (state.rest.endsAt) {
-    // ESTADO: DESCANSANDO
-    const left = Math.max(0, state.rest.endsAt - Date.now());
-    clock.textContent = fmtSecs(Math.ceil(left / 1000));
-    clock.classList.add("resting");
-    $("#focusClockLbl").textContent = "Descansando...";
-    
-    // Actualizar aro (de lleno a vacío)
-    const circle = $("#focusRing");
-    if (circle) {
-      circle.style.stroke = "var(--acc2)"; // Color cian
-      const pct = left / state.rest.total;
-      circle.setAttribute("stroke-dashoffset", 283 - (283 * pct));
-    }
-  } else {
-    // ESTADO: EN ESPERA
-    clock.textContent = "💪"; // Icono en vez de números
-    clock.classList.remove("resting");
-    $("#focusClockLbl").textContent = "Listo para la serie";
-    
-    const circle = $("#focusRing");
-    if (circle) {
-      circle.style.stroke = "transparent"; // Ocultar aro
-      circle.setAttribute("stroke-dashoffset", 283); 
-    }
+  const left = Math.max(0, state.rest.endsAt - Date.now());
+  clock.textContent = fmtSecs(Math.ceil(left / 1000));
+  
+  const circle = $("#focusRing");
+  if (circle) {
+    const pct = left / state.rest.total;
+    circle.setAttribute("stroke-dashoffset", 283 - (283 * pct));
   }
 }
 
@@ -1023,7 +1023,9 @@ document.addEventListener("click", e => {
         ex.sets[setIdx + 1].weight = prevWeight;
         persist.session();
       }
-      openFocus(exIdx, setIdx + 1);
+      // Pasar a la siguiente serie en modo Pausa
+      state.focus = { exIdx, setIdx: setIdx + 1, resting: true };
+      renderFocusContent();
     } else {
       closeFocus();
     }
