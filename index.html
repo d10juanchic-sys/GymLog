@@ -144,13 +144,13 @@ textarea.inp{font-family:inherit;resize:vertical;min-height:40px}
 .field{margin-bottom:13px}
 .field label{display:block;font-size:11.5px;letter-spacing:.05em;text-transform:uppercase;
   color:var(--muted);margin-bottom:6px;font-weight:700}
-.field input,.field select{
+.field input,.field select, .field textarea{
   width:100%;background:#0c1117;border:1px solid var(--line);color:var(--txt);
   border-radius:11px;padding:12px 13px;font-size:15px;outline:none;
 }
-.field input:focus,.field select:focus{border-color:var(--acc2)}
+.field input:focus,.field select:focus, .field textarea:focus{border-color:var(--acc2)}
 .tpl-row{background:#11161e;border:1px solid var(--line);border-radius:10px;padding:10px;margin-bottom:8px;display:flex;flex-direction:column;gap:8px}
-.tpl-row-top{display:grid;grid-template-columns:1fr 32px;gap:6px}
+.tpl-row-top{display:grid;grid-template-columns:1fr 70px 32px;gap:6px}
 .tpl-row-bot{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:6px}
 .tpl-row .inp{padding:9px}
 .tpl-row .del{background:transparent;border:1px solid #3a2630;color:var(--danger);
@@ -248,7 +248,7 @@ textarea.inp{font-family:inherit;resize:vertical;min-height:40px}
 
 <header class="topbar">
  <button id="installBtn" style="display:none; background:var(--acc2); color:#000; border:none; padding:6px 10px; border-radius:8px; font-weight:bold; font-size:12px; margin-right:10px;">Instalar App</button>
-  <div class="brand">GYM<b>LOG</b> <span>v2.5</span></div>
+  <div class="brand">GYM<b>LOG</b> <span>v2.6</span></div>
   <nav>
     <button data-nav="home">Inicio</button>
     <button data-nav="profile">Perfil</button>
@@ -300,37 +300,37 @@ function imcInfo(v){
 }
 
 const DEFAULT_TEMPLATES = [
-  { id:"fullbody", name:"Full Body", exercises:[
-    { name:"Sentadilla",            sets:"4", reps:"8-10",  rest:120, tempo:"3-1-2", rir:"2" },
-    { name:"Press banca",           sets:"4", reps:"8-10",  rest:120, tempo:"2-0-2", rir:"2" },
-    { name:"Remo con barra",        sets:"3", reps:"10-12", rest:90,  tempo:"2-0-1", rir:"1-2" },
-    { name:"Press militar",         sets:"3", reps:"10-12", rest:90,  tempo:"2-0-2", rir:"2" },
-    { name:"Curl bíceps",           sets:"3", reps:"12",    rest:60,  tempo:"2-0-1", rir:"1" },
-    { name:"Plancha",               sets:"3", reps:"40 s",  rest:60,  tempo:"-",     rir:"-" }
+  { id:"fullbody", name:"Full Body", warmup:"5 min bici fija o elíptica. Movilidad articular general (hombros, caderas, rodillas). 2x15 sentadillas al aire.", cooldown:"Estiramientos suaves de isquios, cuádriceps y pectorales. 5 minutos de respiración diafragmática.", exercises:[
+    { name:"Sentadilla",            sets:"4", reps:"8-10",  rest:120, tempo:"3-1-2", rir:"2", type:"reps" },
+    { name:"Press banca",           sets:"4", reps:"8-10",  rest:120, tempo:"2-0-2", rir:"2", type:"reps" },
+    { name:"Remo con barra",        sets:"3", reps:"10-12", rest:90,  tempo:"2-0-1", rir:"1-2", type:"reps" },
+    { name:"Press militar",         sets:"3", reps:"10-12", rest:90,  tempo:"2-0-2", rir:"2", type:"reps" },
+    { name:"Curl bíceps",           sets:"3", reps:"12",    rest:60,  tempo:"2-0-1", rir:"1", type:"reps" },
+    { name:"Plancha",               sets:"3", reps:"40s",   rest:60,  tempo:"-",     rir:"-", type:"time" }
   ]},
-  { id:"push", name:"Push · Empuje", exercises:[
-    { name:"Press banca",           sets:"4", reps:"6-8",   rest:150, tempo:"3-1-1", rir:"1-2" },
-    { name:"Press inclinado manc.", sets:"3", reps:"10-12", rest:90,  tempo:"2-0-2", rir:"2" },
-    { name:"Aperturas",             sets:"3", reps:"12-15", rest:60,  tempo:"2-0-2", rir:"1" },
-    { name:"Press militar",         sets:"3", reps:"8-10",  rest:120, tempo:"2-0-2", rir:"2" },
-    { name:"Elevaciones laterales", sets:"3", reps:"15",    rest:60,  tempo:"2-0-1", rir:"1" },
-    { name:"Fondos en paralelas",   sets:"3", reps:"10-12", rest:90,  tempo:"2-0-2", rir:"1-2" }
+  { id:"push", name:"Push · Empuje", warmup:"Band pull-aparts 2x15. Rotaciones de hombro. Series de aproximación con poco peso.", cooldown:"Estiramiento de pecho en pared y tríceps.", exercises:[
+    { name:"Press banca",           sets:"4", reps:"6-8",   rest:150, tempo:"3-1-1", rir:"1-2", type:"reps" },
+    { name:"Press inclinado manc.", sets:"3", reps:"10-12", rest:90,  tempo:"2-0-2", rir:"2", type:"reps" },
+    { name:"Aperturas",             sets:"3", reps:"12-15", rest:60,  tempo:"2-0-2", rir:"1", type:"reps" },
+    { name:"Press militar",         sets:"3", reps:"8-10",  rest:120, tempo:"2-0-2", rir:"2", type:"reps" },
+    { name:"Elevaciones laterales", sets:"3", reps:"15",    rest:60,  tempo:"2-0-1", rir:"1", type:"reps" },
+    { name:"Fondos en paralelas",   sets:"3", reps:"10-12", rest:90,  tempo:"2-0-2", rir:"1-2", type:"reps" }
   ]},
-  { id:"pull", name:"Pull · Tirón", exercises:[
-    { name:"Dominadas",             sets:"4", reps:"6-10",  rest:150, tempo:"2-0-1", rir:"1" },
-    { name:"Remo con barra",        sets:"4", reps:"8-10",  rest:120, tempo:"2-0-1", rir:"2" },
-    { name:"Jalón al pecho",        sets:"3", reps:"10-12", rest:90,  tempo:"2-0-2", rir:"2" },
-    { name:"Face pull",             sets:"3", reps:"15",    rest:60,  tempo:"2-0-2", rir:"1" },
-    { name:"Curl bíceps barra",     sets:"3", reps:"10-12", rest:60,  tempo:"2-0-2", rir:"1" },
-    { name:"Curl martillo",         sets:"3", reps:"12",    rest:60,  tempo:"2-0-1", rir:"1" }
+  { id:"pull", name:"Pull · Tirón", warmup:"Colgado pasivo 2x20s. Remo con banda 2x15.", cooldown:"Estiramiento de dorsales y bíceps.", exercises:[
+    { name:"Dominadas",             sets:"4", reps:"6-10",  rest:150, tempo:"2-0-1", rir:"1", type:"reps" },
+    { name:"Remo con barra",        sets:"4", reps:"8-10",  rest:120, tempo:"2-0-1", rir:"2", type:"reps" },
+    { name:"Jalón al pecho",        sets:"3", reps:"10-12", rest:90,  tempo:"2-0-2", rir:"2", type:"reps" },
+    { name:"Face pull",             sets:"3", reps:"15",    rest:60,  tempo:"2-0-2", rir:"1", type:"reps" },
+    { name:"Curl bíceps barra",     sets:"3", reps:"10-12", rest:60,  tempo:"2-0-2", rir:"1", type:"reps" },
+    { name:"Elevación de rodillas colgado", sets:"3", reps:"10", rest:60, tempo:"2-0-1", rir:"1", type:"reps" }
   ]},
-  { id:"legs", name:"Pierna", exercises:[
-    { name:"Sentadilla",            sets:"4", reps:"6-8",   rest:150, tempo:"3-1-2", rir:"1-2" },
-    { name:"Peso muerto rumano",    sets:"3", reps:"8-10",  rest:120, tempo:"3-1-2", rir:"2" },
-    { name:"Prensa",                sets:"3", reps:"10-12", rest:90,  tempo:"2-0-2", rir:"1" },
-    { name:"Zancadas",              sets:"3", reps:"12 x pierna", rest:90, tempo:"2-0-2", rir:"2" },
-    { name:"Curl femoral",          sets:"3", reps:"12-15", rest:60,  tempo:"2-1-1", rir:"1" },
-    { name:"Gemelos",               sets:"4", reps:"15-20", rest:45,  tempo:"2-1-2", rir:"0-1" }
+  { id:"legs", name:"Pierna", warmup:"10 min bici. Movilidad de cadera y tobillo. 2x15 puentes de glúteo.", cooldown:"Estiramiento de cuádriceps, isquios y gemelos.", exercises:[
+    { name:"Sentadilla",            sets:"4", reps:"6-8",   rest:150, tempo:"3-1-2", rir:"1-2", type:"reps" },
+    { name:"Peso muerto rumano",    sets:"3", reps:"8-10",  rest:120, tempo:"3-1-2", rir:"2", type:"reps" },
+    { name:"Prensa",                sets:"3", reps:"10-12", rest:90,  tempo:"2-0-2", rir:"1", type:"reps" },
+    { name:"Zancadas",              sets:"3", reps:"12 x pierna", rest:90, tempo:"2-0-2", rir:"2", type:"reps" },
+    { name:"Curl femoral",          sets:"3", reps:"12-15", rest:60,  tempo:"2-1-1", rir:"1", type:"reps" },
+    { name:"Gemelos",               sets:"4", reps:"15-20", rest:45,  tempo:"2-1-2", rir:"0-1", type:"reps" }
   ]}
 ];
 
@@ -536,7 +536,27 @@ function renderWorkout(){
     <div class="lbl mt8" style="text-align:right">${doneSets}/${totalSets} series · ${pct}%</div>
   </div>
 
+  ${s.warmup ? `
+  <div class="card" style="border-left: 4px solid var(--warn); background: rgba(255, 176, 32, 0.05);">
+    <div class="row gap6" style="margin-bottom: 4px;">
+      <span style="font-size: 18px;">🔥</span>
+      <span class="exname" style="color: var(--warn);">Calentamiento</span>
+    </div>
+    <div style="white-space: pre-wrap; font-size: 13.5px; color: var(--txt);">${esc(s.warmup)}</div>
+  </div>
+  ` : ""}
+
   ${s.exercises.map((ex, i) => renderExercise(ex, i)).join("")}
+
+  ${s.cooldown ? `
+  <div class="card" style="border-left: 4px solid var(--acc2); background: rgba(77, 214, 240, 0.05);">
+    <div class="row gap6" style="margin-bottom: 4px;">
+      <span style="font-size: 18px;">🧘</span>
+      <span class="exname" style="color: var(--acc2);">Vuelta a la calma</span>
+    </div>
+    <div style="white-space: pre-wrap; font-size: 13.5px; color: var(--txt);">${esc(s.cooldown)}</div>
+  </div>
+  ` : ""}
 
   <button class="btn ghost big mt8" data-act="addExercise">+ Agregar ejercicio</button>
 
@@ -552,13 +572,15 @@ function renderExercise(ex, i){
   if (ex.tempo && ex.tempo !== "-") extras.push(`Tempo: ${esc(ex.tempo)}`);
   if (ex.rir && ex.rir !== "-") extras.push(`RIR: ${esc(ex.rir)}`);
   const extrasTxt = extras.length ? ` · ${extras.join(" · ")}` : "";
+  
+  const isTime = ex.type === "time";
 
   return `
   <div class="card">
     <div class="row between">
       <div>
         <div class="exname">${esc(ex.name)}</div>
-        <div class="lbl">${ex.sets.length} × ${esc(ex.reps)}${extrasTxt} · desc. ${fmtShort(ex.rest)}</div>
+        <div class="lbl">${ex.sets.length} × ${isTime ? "tiempo" : esc(ex.reps)}${extrasTxt} · desc. ${fmtShort(ex.rest)}</div>
       </div>
       <button class="btn rest" data-act="restGo" data-secs="${ex.rest}">⏱ ${fmtShort(ex.rest)}</button>
     </div>
@@ -566,12 +588,18 @@ function renderExercise(ex, i){
       ${ex.sets.map((st, j) => `
         <div class="set ${st.done ? "done" : ""}">
           <span class="setn">${j+1}</span>
-          <input class="inp" type="number" inputmode="decimal" step="0.5" min="0"
-                 placeholder="kg" value="${st.weight ?? ""}"
-                 data-ex="${i}" data-set="${j}" data-f="weight">
-          <input class="inp" type="text" inputmode="text"
-                 placeholder="${esc(ex.reps)}" value="${st.reps ?? ""}"
-                 data-ex="${i}" data-set="${j}" data-f="reps">
+          ${isTime ? `
+            <input class="inp" type="number" inputmode="numeric" min="0"
+                   placeholder="seg" value="${st.reps ?? ""}"
+                   data-ex="${i}" data-set="${j}" data-f="reps" style="grid-column: span 2;">
+          ` : `
+            <input class="inp" type="number" inputmode="decimal" step="0.5" min="0"
+                   placeholder="kg" value="${st.weight ?? ""}"
+                   data-ex="${i}" data-set="${j}" data-f="weight">
+            <input class="inp" type="text" inputmode="text"
+                   placeholder="${esc(ex.reps)}" value="${st.reps ?? ""}"
+                   data-ex="${i}" data-set="${j}" data-f="reps">
+          `}
           <button class="focus-btn" data-act="openFocus" data-ex="${i}" data-set="${j}" title="Modo Enfoque">▶</button>
           <button class="check ${st.done ? "on" : ""}" data-act="toggleSet" data-ex="${i}" data-set="${j}">✓</button>
         </div>`).join("")}
@@ -700,7 +728,6 @@ setInterval(tick, 200);
    VISTA DE ENFOQUE (FOCUS MODE DINÁMICO)
    ============================================================ */
 function openFocus(exIdx, setIdx) {
-  // Si abrimos una serie manualmente y hay un descanso corriendo, lo detenemos para no confundir
   if (!state.focus.resting) {
     restStop();
   }
@@ -718,6 +745,7 @@ function renderFocusContent() {
   const st = ex.sets[setIdx];
   const isLastSet = setIdx >= ex.sets.length - 1;
   const isResting = state.focus.resting;
+  const isTime = ex.type === "time";
 
   let bodyHtml = "";
 
@@ -735,28 +763,44 @@ function renderFocusContent() {
     `;
   } else {
     // ESTADO: LISTO PARA LA SERIE
-    bodyHtml = `
-      <div class="focus-icon">💪</div>
-      <div class="focus-controls">
-        <div class="focus-control-box">
-          <button class="focus-btn-step" data-act="focusStep" data-f="weight" data-dir="-1">−</button>
-          <div style="flex:1">
-            <div class="focus-val" id="focusWeight">${st.weight || "0"}</div>
-            <div class="focus-val-lbl">Peso (kg)</div>
+    if (isTime) {
+      bodyHtml = `
+        <div class="focus-icon">⏱️</div>
+        <div class="focus-controls" style="grid-template-columns: 1fr;">
+          <div class="focus-control-box">
+            <button class="focus-btn-step" data-act="focusStep" data-f="reps" data-dir="-5">−</button>
+            <div style="flex:1">
+              <div class="focus-val" id="focusReps">${st.reps || "0"}</div>
+              <div class="focus-val-lbl">Segundos</div>
+            </div>
+            <button class="focus-btn-step" data-act="focusStep" data-f="reps" data-dir="5">+</button>
           </div>
-          <button class="focus-btn-step" data-act="focusStep" data-f="weight" data-dir="1">+</button>
         </div>
+      `;
+    } else {
+      bodyHtml = `
+        <div class="focus-icon">💪</div>
+        <div class="focus-controls">
+          <div class="focus-control-box">
+            <button class="focus-btn-step" data-act="focusStep" data-f="weight" data-dir="-2.5">−</button>
+            <div style="flex:1">
+              <div class="focus-val" id="focusWeight">${st.weight || "0"}</div>
+              <div class="focus-val-lbl">Peso (kg)</div>
+            </div>
+            <button class="focus-btn-step" data-act="focusStep" data-f="weight" data-dir="2.5">+</button>
+          </div>
 
-        <div class="focus-control-box">
-          <button class="focus-btn-step" data-act="focusStep" data-f="reps" data-dir="-1">−</button>
-          <div style="flex:1">
-            <div class="focus-val" id="focusReps">${st.reps || "0"}</div>
-            <div class="focus-val-lbl">Reps</div>
+          <div class="focus-control-box">
+            <button class="focus-btn-step" data-act="focusStep" data-f="reps" data-dir="-1">−</button>
+            <div style="flex:1">
+              <div class="focus-val" id="focusReps">${st.reps || "0"}</div>
+              <div class="focus-val-lbl">Reps</div>
+            </div>
+            <button class="focus-btn-step" data-act="focusStep" data-f="reps" data-dir="1">+</button>
           </div>
-          <button class="focus-btn-step" data-act="focusStep" data-f="reps" data-dir="1">+</button>
         </div>
-      </div>
-    `;
+      `;
+    }
   }
 
   let btnText = "✓ Completar Serie";
@@ -776,7 +820,7 @@ function renderFocusContent() {
     <div class="focus-sheet">
       <div class="focus-header">
         <div class="focus-title">${esc(ex.name)}</div>
-        <div class="focus-sub">Serie ${setIdx + 1} de ${ex.sets.length} · Objetivo: ${esc(ex.reps)} reps</div>
+        <div class="focus-sub">Serie ${setIdx + 1} de ${ex.sets.length} · Objetivo: ${isTime ? "Tiempo" : esc(ex.reps) + " reps"}</div>
         <div class="focus-meta">
           ${ex.tempo ? `<span>Tempo: ${ex.tempo}</span>` : ""}
           ${ex.rir ? `<span>RIR: ${ex.rir}</span>` : ""}
@@ -805,13 +849,12 @@ function closeFocus() {
   render(); 
 }
 
-function focusStep(field, dir) {
+function focusStep(field, amount) {
   const ex = state.session.exercises[state.focus.exIdx];
   const st = ex.sets[state.focus.setIdx];
   let val = parseFloat(st[field]) || 0;
   
-  const step = field === "weight" ? 2.5 : 1;
-  val += (step * dir);
+  val += amount;
   if (val < 0) val = 0;
   
   st[field] = val % 1 === 0 ? val.toString() : val.toFixed(1);
@@ -853,19 +896,30 @@ function modalNewSession(preId){
 
 function modalExercise(exIdx){
   const isEdit = exIdx !== undefined && exIdx !== null;
-  const ex = isEdit ? state.session.exercises[exIdx] : { name:"", reps:"8-12", rest:90, tempo:"", rir:"", notes:"" };
+  const ex = isEdit ? state.session.exercises[exIdx] : { name:"", reps:"8-12", rest:90, tempo:"", rir:"", notes:"", type:"reps" };
   openModal(`
     <h2>${isEdit ? "Editar ejercicio" : "Agregar ejercicio"}</h2>
     <div class="field"><label>Nombre</label><input id="eName" value="${esc(ex.name)}" placeholder="Ej: Press banca"></div>
+    
+    <div class="field">
+      <label>Tipo de Ejercicio</label>
+      <select id="eType">
+        <option value="reps" ${(!ex.type || ex.type==="reps") ? "selected" : ""}>Peso / Reps</option>
+        <option value="time" ${ex.type==="time" ? "selected" : ""}>Por tiempo (isométrico)</option>
+      </select>
+    </div>
+
     <div class="row gap8">
       <div class="field" style="flex:1"><label>Series</label><input id="eSets" type="text" value="${ex.sets && ex.sets.length ? ex.sets.length : 3}" placeholder="Ej: 3 o 2-3"></div>
-      <div class="field" style="flex:1"><label>Reps objetivo</label><input id="eReps" value="${esc(ex.reps)}" placeholder="Ej: 8-12"></div>
+      <div class="field" style="flex:1"><label>Reps objetivo</label><input id="eReps" value="${esc(ex.reps)}" placeholder="Ej: 8-12 o 40s"></div>
       <div class="field" style="flex:1"><label>Desc. (seg)</label><input id="eRest" type="number" min="10" max="600" step="5" value="${ex.rest}"></div>
     </div>
+    
     <div class="row gap8">
       <div class="field" style="flex:1"><label>Tempo</label><input id="eTempo" value="${esc(ex.tempo || "")}" placeholder="Ej: 3-1-2"></div>
       <div class="field" style="flex:1"><label>RIR</label><input id="eRIR" value="${esc(ex.rir || "")}" placeholder="Ej: 1-2"></div>
     </div>
+
     <button class="btn acc big mt8" data-act="saveExercise" data-idx="${isEdit ? exIdx : ""}">${isEdit ? "Guardar" : "Agregar"}</button>
     <button class="btn ghost big mt8" data-act="closeModal">Cancelar</button>
   `);
@@ -874,23 +928,33 @@ function modalExercise(exIdx){
 function modalTemplate(tplId){
   const isNew = !tplId;
   const tpl = isNew
-    ? { id: uid(), name:"", exercises:[] }
+    ? { id: uid(), name:"", warmup:"", cooldown:"", exercises:[] }
     : JSON.parse(JSON.stringify(state.templates.find(t => t.id === tplId)));
 
   openModal(`
     <h2>${isNew ? "Nueva plantilla" : "Editar plantilla"}</h2>
     <div class="field"><label>Nombre</label><input id="tName" value="${esc(tpl.name)}" placeholder="Ej: Torso A"></div>
+    
+    <div class="field">
+      <label>🔥 Calentamiento (Notas)</label>
+      <textarea id="tWarmup" class="inp" rows="2" placeholder="Ej: 5 min bici, movilidad...">${esc(tpl.warmup || "")}</textarea>
+    </div>
+
     <label class="lbl" style="display:block;margin:16px 0 8px">Ejercicios</label>
     <div id="tplList">
       ${tpl.exercises.map((e, i) => `
         <div class="tpl-row" data-row="${i}">
           <div class="tpl-row-top">
             <input class="inp" data-f="name" placeholder="Ejercicio" value="${esc(e.name)}">
+            <select class="inp" data-f="type" style="padding:8px;">
+              <option value="reps" ${(!e.type || e.type==="reps") ? "selected" : ""}>Reps</option>
+              <option value="time" ${e.type==="time" ? "selected" : ""}>Tiempo</option>
+            </select>
             <button class="del" data-act="tplDelRow" data-i="${i}">×</button>
           </div>
           <div class="tpl-row-bot">
             <input class="inp" data-f="sets" type="text" placeholder="Series (ej 3)" value="${esc(e.sets)}">
-            <input class="inp" data-f="reps" placeholder="Reps" value="${esc(e.reps)}">
+            <input class="inp" data-f="reps" placeholder="Reps/Seg" value="${esc(e.reps)}">
             <input class="inp" data-f="tempo" placeholder="Tempo" value="${esc(e.tempo || "")}">
             <input class="inp" data-f="rir" placeholder="RIR" value="${esc(e.rir || "")}">
           </div>
@@ -900,6 +964,12 @@ function modalTemplate(tplId){
         </div>`).join("")}
     </div>
     <button class="btn ghost sm mt8" data-act="tplAddRow">+ Agregar fila</button>
+    
+    <div class="field mt12">
+      <label>🧘 Vuelta a la calma (Notas)</label>
+      <textarea id="tCooldown" class="inp" rows="2" placeholder="Ej: Estiramiento de isquios...">${esc(tpl.cooldown || "")}</textarea>
+    </div>
+
     <div style="height:14px"></div>
     <button class="btn acc big" data-act="saveTemplate" data-id="${tpl.id}" data-new="${isNew ? 1 : 0}">Guardar plantilla</button>
     ${isNew ? "" : `<button class="btn danger big mt8" data-act="deleteTemplate" data-id="${tpl.id}">Eliminar plantilla</button>`}
@@ -957,19 +1027,34 @@ function generateAIText(limit) {
   hist.forEach(h => {
     txt += `📅 ${fmtDate(h.date)} (${fmtTime(h.date)}) | Plantilla: ${h.templateName}\n`;
     txt += `⏱ Duración: ${fmtClock(h.durationMs)} | Volumen: ${h.volume} kg | Series: ${h.doneSets}/${h.totalSets}\n`;
+    
+    if (h.warmup) txt += `🔥 Calentamiento: ${h.warmup}\n`;
+    
     h.exercises.forEach(ex => {
       const done = ex.sets.filter(s => s.done);
       if (done.length === 0) return;
+      
       let exTitle = `- ${ex.name} (Objetivo: ${ex.reps}`;
       if (ex.tempo) exTitle += ` | Tempo: ${ex.tempo}`;
       if (ex.rir) exTitle += ` | RIR: ${ex.rir}`;
       exTitle += `):\n`;
       txt += exTitle;
-      done.forEach((s, i) => { txt += `   Serie ${i+1}: ${s.weight || "0"}kg x ${s.reps || "?"} reps\n`; });
+      
+      done.forEach((s, i) => { 
+        if (ex.type === "time") {
+          txt += `   Serie ${i+1}: ${s.reps || "?"} seg\n`; 
+        } else {
+          txt += `   Serie ${i+1}: ${s.weight || "0"}kg x ${s.reps || "?"} reps\n`; 
+        }
+      });
+      
       if (ex.notes && ex.notes.trim() !== "") txt += `   [Nota: ${ex.notes.trim()}]\n`;
     });
+    
+    if (h.cooldown) txt += `🧘 Vuelta a la calma: ${h.cooldown}\n`;
     txt += `\n----------------------------------------\n\n`;
   });
+  
   txt += `Analiza mi progresión, detecta estancamientos y sugiere qué pesos/reps usar la próxima sesión. Ten en cuenta mis notas. Prioriza la claridad.`;
   return txt;
 }
@@ -980,12 +1065,19 @@ function startSession(templateId, startTs){
     let numSets = parseInt(e.sets);
     if (isNaN(numSets)) numSets = 3; 
     return {
-      name: e.name, reps: e.reps, rest: e.rest, tempo: e.tempo, rir: e.rir, notes: "",
+      name: e.name, reps: e.reps, rest: e.rest, tempo: e.tempo, rir: e.rir, notes: "", type: e.type || "reps",
       sets: Array.from({ length: numSets }, () => ({ done:false, weight:"", reps:"" }))
     };
   }) : [];
 
-  state.session = { id: uid(), templateName: tpl ? tpl.name : "Sesión libre", startedAt: startTs, exercises };
+  state.session = { 
+    id: uid(), 
+    templateName: tpl ? tpl.name : "Sesión libre", 
+    warmup: tpl ? tpl.warmup : "", 
+    cooldown: tpl ? tpl.cooldown : "", 
+    startedAt: startTs, 
+    exercises 
+  };
   state.timer = { running:true, elapsed:0, startedAt: Date.now() };
   persist.session(); persist.timer();
   closeModal(); go("workout");
@@ -1000,7 +1092,11 @@ function finishSession(){
     if (st.done){ volume += (parseFloat(st.weight) || 0) * (parseFloat(st.reps) || 0); }
   }));
 
-  state.history.push({ id: s.id, date: s.startedAt, templateName: s.templateName, durationMs: timerElapsed(), totalSets, doneSets, volume: Math.round(volume), exercises: s.exercises });
+  state.history.push({ 
+    id: s.id, date: s.startedAt, templateName: s.templateName, durationMs: timerElapsed(), 
+    totalSets, doneSets, volume: Math.round(volume), exercises: s.exercises,
+    warmup: s.warmup, cooldown: s.cooldown
+  });
   persist.history();
 
   state.session = null; persist.session();
@@ -1022,10 +1118,9 @@ document.addEventListener("click", e => {
   /* FOCUS MODE */
   if (act === "openFocus") return openFocus(+btn.dataset.ex, +btn.dataset.set);
   if (act === "closeFocus") return closeFocus();
-  if (act === "focusStep") return focusStep(btn.dataset.f, parseInt(btn.dataset.dir));
+  if (act === "focusStep") return focusStep(btn.dataset.f, parseFloat(btn.dataset.dir));
   
   if (act === "finishPause") {
-    // Terminar pausa y mostrar controles sin reiniciar el tiempo de descanso
     state.focus.resting = false;
     renderFocusContent();
     return;
@@ -1047,7 +1142,6 @@ document.addEventListener("click", e => {
         ex.sets[setIdx + 1].weight = prevWeight;
         persist.session();
       }
-      // Pasar a la siguiente serie en modo Pausa
       state.focus = { exIdx, setIdx: setIdx + 1, resting: true };
       renderFocusContent();
     } else {
@@ -1122,13 +1216,26 @@ document.addEventListener("click", e => {
   if (act === "addExercise") return modalExercise(null);
   if (act === "saveExercise"){
     const idx = btn.dataset.idx;
-    const data = { name: $("#eName").value.trim() || "Ejercicio", sets: $("#eSets").value.trim() || "3", reps: $("#eReps").value.trim() || "8-12", rest: Math.max(10, parseInt($("#eRest").value, 10) || 90), tempo: $("#eTempo").value.trim(), rir: $("#eRIR").value.trim() };
+    const data = { 
+      name: $("#eName").value.trim() || "Ejercicio", 
+      type: $("#eType").value,
+      sets: $("#eSets").value.trim() || "3", 
+      reps: $("#eReps").value.trim() || ( $("#eType").value === "time" ? "40s" : "8-12"), 
+      rest: Math.max(10, parseInt($("#eRest").value, 10) || 90), 
+      tempo: $("#eTempo").value.trim(), 
+      rir: $("#eRIR").value.trim() 
+    };
+    
     let numSets = parseInt(data.sets); if (isNaN(numSets)) numSets = 3;
+    
     if (idx === ""){
-      state.session.exercises.push({ name: data.name, reps: data.reps, rest: data.rest, tempo: data.tempo, rir: data.rir, notes: "", sets: Array.from({ length: numSets }, () => ({ done:false, weight:"", reps:"" })) });
+      state.session.exercises.push({ 
+        name: data.name, type: data.type, reps: data.reps, rest: data.rest, tempo: data.tempo, rir: data.rir, notes: "", 
+        sets: Array.from({ length: numSets }, () => ({ done:false, weight:"", reps:"" })) 
+      });
     } else {
       const ex = state.session.exercises[+idx];
-      ex.name = data.name; ex.reps = data.reps; ex.rest = data.rest; ex.tempo = data.tempo; ex.rir = data.rir;
+      ex.name = data.name; ex.type = data.type; ex.reps = data.reps; ex.rest = data.rest; ex.tempo = data.tempo; ex.rir = data.rir;
       while (ex.sets.length < numSets) ex.sets.push({ done:false, weight:"", reps:"" });
       while (ex.sets.length > numSets) ex.sets.pop();
     }
@@ -1144,26 +1251,50 @@ document.addEventListener("click", e => {
     const div = document.createElement("div");
     div.className = "tpl-row"; div.dataset.row = i;
     div.innerHTML = `
-      <div class="tpl-row-top"><input class="inp" data-f="name" placeholder="Ejercicio" value=""><button class="del" data-act="tplDelRow" data-i="${i}">×</button></div>
-      <div class="tpl-row-bot"><input class="inp" data-f="sets" type="text" placeholder="Series (ej 3)" value="3"><input class="inp" data-f="reps" placeholder="Reps" value="8-12"><input class="inp" data-f="tempo" placeholder="Tempo" value=""><input class="inp" data-f="rir" placeholder="RIR" value=""></div>
-      <div class="tpl-row-bot"><input class="inp" data-f="rest" type="number" min="10" step="5" placeholder="Descanso (seg)" value="90" style="grid-column: span 4;"></div>`;
+      <div class="tpl-row-top">
+        <input class="inp" data-f="name" placeholder="Ejercicio" value="">
+        <select class="inp" data-f="type" style="padding:8px;">
+          <option value="reps">Reps</option>
+          <option value="time">Tiempo</option>
+        </select>
+        <button class="del" data-act="tplDelRow" data-i="${i}">×</button>
+      </div>
+      <div class="tpl-row-bot">
+        <input class="inp" data-f="sets" type="text" placeholder="Series" value="3">
+        <input class="inp" data-f="reps" placeholder="Reps/Seg" value="8-12">
+        <input class="inp" data-f="tempo" placeholder="Tempo" value="">
+        <input class="inp" data-f="rir" placeholder="RIR" value="">
+      </div>
+      <div class="tpl-row-bot">
+        <input class="inp" data-f="rest" type="number" min="10" step="5" placeholder="Descanso (seg)" value="90" style="grid-column: span 4;">
+      </div>`;
     list.appendChild(div); return;
   }
   if (act === "tplDelRow"){ const row = btn.closest(".tpl-row"); if (row) row.remove(); return; }
   if (act === "saveTemplate"){
     const name = $("#tName").value.trim();
     if (!name){ alert("Poné un nombre a la plantilla."); return; }
+    
+    const warmup = $("#tWarmup").value.trim();
+    const cooldown = $("#tCooldown").value.trim();
+
     const exercises = [...document.querySelectorAll("#tplList .tpl-row")].map(r => ({
       name: r.querySelector('[data-f="name"]').value.trim() || "Ejercicio",
+      type: r.querySelector('[data-f="type"]').value,
       sets: r.querySelector('[data-f="sets"]').value.trim() || "3",
       reps: r.querySelector('[data-f="reps"]').value.trim() || "8-12",
       tempo: r.querySelector('[data-f="tempo"]').value.trim(),
       rir: r.querySelector('[data-f="rir"]').value.trim(),
       rest: Math.max(10, parseInt(r.querySelector('[data-f="rest"]').value, 10) || 90)
     })).filter(e => e.name);
+    
     const id = btn.dataset.id;
-    if (btn.dataset.new === "1"){ state.templates.push({ id, name, exercises }); }
-    else { const t = state.templates.find(x => x.id === id); t.name = name; t.exercises = exercises; }
+    if (btn.dataset.new === "1"){ 
+      state.templates.push({ id, name, warmup, cooldown, exercises }); 
+    } else { 
+      const t = state.templates.find(x => x.id === id); 
+      t.name = name; t.warmup = warmup; t.cooldown = cooldown; t.exercises = exercises; 
+    }
     persist.templates(); closeModal(); render(); return;
   }
   if (act === "deleteTemplate"){ if (!confirm("¿Eliminar esta plantilla?")) return; state.templates = state.templates.filter(t => t.id !== btn.dataset.id); persist.templates(); closeModal(); render(); return; }
